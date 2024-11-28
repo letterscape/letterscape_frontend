@@ -2,7 +2,7 @@ import Link from 'next/link';
 import { observer } from 'mobx-react-lite';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCircleUser } from '@fortawesome/free-regular-svg-icons';
-import { AdjustmentsHorizontalIcon, UserIcon, ClipboardDocumentListIcon, ArrowTurnDownRightIcon } from '@heroicons/react/24/outline'
+import { AdjustmentsHorizontalIcon, UserIcon, ClipboardDocumentListIcon, ArrowTurnDownRightIcon, PlusIcon } from '@heroicons/react/24/outline'
 import Image from 'next/image';
 
 const Navbar = () => {
@@ -18,7 +18,7 @@ const Navbar = () => {
           <div className="flex-none">
             <ul className="menu menu-horizontal">
               <li className="text-xs"><Link href="/market"><b>Market</b></Link></li>
-              <li className="text-xs"><Link href="/creation"><b>Create</b></Link></li>
+              <li className="text-xs"><Link href="/mint"><b>Mint</b></Link></li>
               <li className="text-xs"><Link href="/space"><b>Space</b></Link></li>
             </ul>
           </div>
@@ -35,11 +35,15 @@ const Navbar = () => {
               d="M9.965 11.026a5 5 0 1 1 1.06-1.06l2.755 2.754a.75.75 0 1 1-1.06 1.06l-2.755-2.754ZM10.5 7a3.5 3.5 0 1 1-7 0 3.5 3.5 0 0 1 7 0Z"
               clipRule="evenodd" />
           </svg>
-            <input type="text" className="grow" placeholder="Search" />
-            <kbd className="kbd kbd-sm">⌘</kbd>
+          <input type="text" className="grow" placeholder="Search" />
+          <kbd className="kbd kbd-sm">⌘</kbd>
           </label>
         </div>
         <div className="navbar-end">
+          <ul className="menu menu-horizontal">
+            <li className="text-xs"><Link href="/create"><PlusIcon className="size-6"/><b>Create</b></Link></li>
+          </ul>
+          
           <w3m-button />
           <div className="dropdown dropdown-end">
             <div tabIndex={0} role="button" className="btn btn-ghost btn-circle avatar">

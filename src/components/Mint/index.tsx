@@ -288,20 +288,20 @@ const TokenForm = () => {
   );
 }
 
-const Creation = () => {
+const Mint = () => {
 
   return (
     <div className='gap-px max-w-xl mx-auto p-8'>
       <div className="p-16">
-        <span><p className='text-center text-xl font-mono'>Create NFT</p></span>
+        <span><p className='text-center text-xl font-mono'>Mint NFT</p></span>
       </div>
       <div role="tablist" className="tabs tabs-boxed">
-        <input type="radio" name="creation_tab" role="tab" className="tab" aria-label="First Create" defaultChecked/>
+        <input type="radio" name="creation_tab" role="tab" className="tab" aria-label="First Mint" defaultChecked/>
         <div role="tabpanel" className="tab-content bg-base-100 border-base-300 rounded-box p-6">
           <NoTokenForm />
         </div>
 
-        <input type="radio" name="creation_tab" role="tab" className="tab" aria-label="Create with tokenId" />
+        <input type="radio" name="creation_tab" role="tab" className="tab" aria-label="Mint with tokenId" />
         <div role="tabpanel" className="tab-content bg-base-100 border-base-300 rounded-box p-6">
           <TokenForm />
         </div>
@@ -310,4 +310,4 @@ const Creation = () => {
   );
 }
 
-export default observer(Creation);
+export default observer(Mint);

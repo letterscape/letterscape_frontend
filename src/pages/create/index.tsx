@@ -1,9 +1,9 @@
-import Creation from '@/components/Creation';
+import Create from '@/components/Create';
 
 export default function Index() {
   return (
     <>
-      <Creation />
+      <Create />
     </>
   );
 }
