@@ -167,7 +167,7 @@ class BlockChain {
         startTime: (res1 & this.TIME.valueOf()).toString(),
         amount: res2.toString(),
       };
-      this.lockInfos.push(lockInfo);
+      // this.lockInfos.push(lockInfo);
     }
   };
 

@@ -123,7 +123,7 @@ class Posts {
       content1: '',
       content2: '',
       content3: ''
-    };
+    } as Article;
     this.articles.forEach(item => {
       if (id === item.id) {
         article = item;
