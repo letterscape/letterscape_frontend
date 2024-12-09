@@ -40,9 +40,9 @@ const Navbar = () => {
           </label>
         </div>
         <div className="navbar-end">
-          <ul className="menu menu-horizontal">
+          {/* <ul className="menu menu-horizontal">
             <li className="text-xs"><Link href="/create"><PlusIcon className="size-6"/><b>Create</b></Link></li>
-          </ul>
+          </ul> */}
           
           <w3m-button />
           <div className="dropdown dropdown-end">
@@ -58,6 +58,12 @@ const Navbar = () => {
                 <span className="justify-stretch gap-8 leading-loose">
                   <UserIcon className="size-5" />
                   <Link href="/profile"><b>Profile</b></Link>
+                </span>
+              </li>
+              <li>
+                <span className="justify-stretch gap-8 leading-loose">
+                  <PlusIcon className="size-5"/>
+                  <Link href="/contents"><b>contents</b></Link>
                 </span>
               </li>
               <li>

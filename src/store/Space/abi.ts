@@ -1,0 +1,251 @@
+export const spaceABI = [{
+	type: "constructor",
+	inputs: [{
+		name: "_lsnft",
+		type: "address",
+		internalType: "address"
+	}],
+	stateMutability: "nonpayable"
+}, {
+	type: "function",
+	name: "allOf",
+	inputs: [],
+	outputs: [{
+		name: "",
+		type: "string[]",
+		internalType: "string[]"
+	}],
+	stateMutability: "view"
+}, {
+	type: "function",
+	name: "contentOf",
+	inputs: [{
+		name: "_id",
+		type: "string",
+		internalType: "string"
+	}],
+	outputs: [{
+		name: "",
+		type: "tuple",
+		internalType: "struct Space.Content",
+		components: [{
+			name: "isShowed",
+			type: "bool",
+			internalType: "bool"
+		}, {
+			name: "isDeleted",
+			type: "bool",
+			internalType: "bool"
+		}, {
+			name: "author",
+			type: "address",
+			internalType: "address"
+		}, {
+			name: "label",
+			type: "uint256",
+			internalType: "uint256"
+		}, {
+			name: "favouriteNum",
+			type: "uint256",
+			internalType: "uint256"
+		}, {
+			name: "id",
+			type: "string",
+			internalType: "string"
+		}, {
+			name: "title",
+			type: "string",
+			internalType: "string"
+		}, {
+			name: "resource",
+			type: "string",
+			internalType: "string"
+		}]
+	}],
+	stateMutability: "view"
+}, {
+	type: "function",
+	name: "create",
+	inputs: [{
+		name: "_id",
+		type: "string",
+		internalType: "string"
+	}, {
+		name: "_title",
+		type: "string",
+		internalType: "string"
+	}, {
+		name: "_resource",
+		type: "string",
+		internalType: "string"
+	}, {
+		name: "originURI",
+		type: "string",
+		internalType: "string"
+	}],
+	outputs: [{
+		name: "",
+		type: "bool",
+		internalType: "bool"
+	}],
+	stateMutability: "nonpayable"
+}, {
+	type: "function",
+	name: "deleteContent",
+	inputs: [{
+		name: "_id",
+		type: "string",
+		internalType: "string"
+	}],
+	outputs: [],
+	stateMutability: "nonpayable"
+}, {
+	type: "function",
+	name: "favour",
+	inputs: [{
+		name: "_id",
+		type: "string",
+		internalType: "string"
+	}],
+	outputs: [],
+	stateMutability: "nonpayable"
+}, {
+	type: "function",
+	name: "isfavourite",
+	inputs: [{
+		name: "_id",
+		type: "string",
+		internalType: "string"
+	}],
+	outputs: [{
+		name: "",
+		type: "bool",
+		internalType: "bool"
+	}],
+	stateMutability: "view"
+}, {
+	type: "function",
+	name: "lsnft",
+	inputs: [],
+	outputs: [{
+		name: "",
+		type: "address",
+		internalType: "address"
+	}],
+	stateMutability: "view"
+}, {
+	type: "function",
+	name: "modifyTitle",
+	inputs: [{
+		name: "_id",
+		type: "string",
+		internalType: "string"
+	}, {
+		name: "_title",
+		type: "string",
+		internalType: "string"
+	}],
+	outputs: [],
+	stateMutability: "nonpayable"
+}, {
+	type: "function",
+	name: "setShowStatus",
+	inputs: [{
+		name: "_id",
+		type: "string",
+		internalType: "string"
+	}, {
+		name: "_isShowed",
+		type: "bool",
+		internalType: "bool"
+	}],
+	outputs: [],
+	stateMutability: "nonpayable"
+}, {
+	type: "function",
+	name: "showedOf",
+	inputs: [],
+	outputs: [{
+		name: "",
+		type: "string[]",
+		internalType: "string[]"
+	}],
+	stateMutability: "view"
+}, {
+	type: "function",
+	name: "totalOf",
+	inputs: [],
+	outputs: [{
+		name: "",
+		type: "uint256",
+		internalType: "uint256"
+	}],
+	stateMutability: "view"
+}, {
+	type: "event",
+	name: "Create",
+	inputs: [{
+		name: "author",
+		type: "address",
+		indexed: true,
+		internalType: "address"
+	}, {
+		name: "id",
+		type: "string",
+		indexed: true,
+		internalType: "string"
+	}, {
+		name: "label",
+		type: "uint256",
+		indexed: true,
+		internalType: "uint256"
+	}, {
+		name: "createTime",
+		type: "uint256",
+		indexed: false,
+		internalType: "uint256"
+	}],
+	anonymous: false
+}, {
+	type: "event",
+	name: "Modify",
+	inputs: [{
+		name: "author",
+		type: "address",
+		indexed: true,
+		internalType: "address"
+	}, {
+		name: "id",
+		type: "string",
+		indexed: true,
+		internalType: "string"
+	}, {
+		name: "label",
+		type: "uint256",
+		indexed: true,
+		internalType: "uint256"
+	}, {
+		name: "modifiedFieldName",
+		type: "string",
+		indexed: false,
+		internalType: "string"
+	}, {
+		name: "modifyTIme",
+		type: "uint256",
+		indexed: false,
+		internalType: "uint256"
+	}],
+	anonymous: false
+}, {
+	type: "error",
+	name: "RequiredAuthorPerm",
+	inputs: [{
+		name: "sender",
+		type: "address",
+		internalType: "address"
+	}, {
+		name: "timestamp",
+		type: "uint256",
+		internalType: "uint256"
+	}]
+}]

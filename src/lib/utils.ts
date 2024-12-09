@@ -1,4 +1,5 @@
 import Decimal from "decimal.js";
+import { v4 as uuidv4 } from 'uuid';
 
 export const formatTimestampToDateTime = (timestamp: number): string => {
   // 将秒级时间戳转换为毫秒级
@@ -33,4 +34,10 @@ export const divideBigIntWithDecimal = (a: bigint, b: bigint, decimalPlaces: num
   // 执行除法并保留指定小数位
   const result = decimalA.div(decimalB).toFixed(decimalPlaces);
   return result.replace(/(\.\d*?[1-9])0+$/, '$1').replace(/\.0+$/, '');
+}
+
+export default function generateUuid() {
+  const id = uuidv4().replaceAll('-', '');
+  console.log("Generated ID:", id);
+  return id;
 }

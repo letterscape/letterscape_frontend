@@ -175,12 +175,6 @@ class LsNFT {
     });
   }
 
-  getWnftPage = (params: any) => {
-    wnftApi.page(params).then(data => {
-
-    })
-  }
-
   getNFTGoodsById = (tokenId: string): NFTGoods | null => {
     const index: number | undefined = this.nftGoodsMap.get(tokenId);
     if (index != undefined && index >= 0) {

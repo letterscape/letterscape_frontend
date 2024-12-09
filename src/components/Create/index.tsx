@@ -2,12 +2,23 @@ import { observer } from "mobx-react-lite";
 import { useRouter } from "next/router";
 import { ChangeEvent, useState } from "react";
 import { Editor } from '@tinymce/tinymce-react';
+import { space } from "postcss/lib/list";
+import { spaceApi } from "@/api/space/space";
+import generateUuid from "@/lib/utils";
+import { successCode } from "@/lib/constants";
+import { spaceStore } from "@/store";
+import { SpaceContent } from "@/store/Space";
+import { useAccount } from "wagmi";
 
 
 const Create = () => {
   const router = useRouter();
+  const account = useAccount();
 
-  const [content, setContent] = useState<string>('');
+  const { space } = spaceStore;
+  const { create } = space;
+
+  const [draft, setDraft] = useState<string>('');
   const [title, setTitle] = useState<string>('');
 
   const handleTitleChange = (e: ChangeEvent<HTMLTextAreaElement>) => {
@@ -15,8 +26,34 @@ const Create = () => {
   }
 
   const handleSave = async () => {
-    // 模拟保存到后端的逻辑
-    console.log("content: ", content);
+    const contentId = generateUuid();
+    const param = {
+      contentId: contentId,
+      content: draft
+    }
+    spaceApi.upload(param).then(async resp => {
+      debugger
+      if (resp && resp.code === successCode) {
+        debugger
+        const cid = resp.data;
+        let content = {
+          contentId: contentId,
+          chainId: String(account.chainId),
+          author: account.address,
+          title: title,
+          resource: cid,
+          favouriteNum: 0,
+          label: 0,
+          isShown: false
+        } as SpaceContent
+        await create(content);
+        router.push("/contents").then(() => {
+          router.reload();
+        });
+      } else {
+        alert(resp.msg);
+      }
+    })
   };
 
   return (
@@ -26,8 +63,8 @@ const Create = () => {
       </div>
       <Editor
         apiKey={process.env.NEXT_PUBLIC_TINYMCE_API_KEY}
-        value={content}
-        onEditorChange={(newContent) => setContent(newContent)}
+        value={draft}
+        onEditorChange={(newContent) => setDraft(newContent)}
         init={{
           height: 500,
           menubar: true,

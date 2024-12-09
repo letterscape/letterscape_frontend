@@ -1,10 +1,9 @@
-import Space from '@/components/Space';
+import Contents from '@/components/Contents';
 
 export default function Index() {
-
   return (
     <>
-      <Space/>
+      <Contents />
     </>
   );
 }

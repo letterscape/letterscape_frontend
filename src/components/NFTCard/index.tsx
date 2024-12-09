@@ -201,7 +201,7 @@ const NFTCard = ({nftInfo, from, link}: {nftInfo: WnftInfo, from: From, link: st
       <div className="card border-2 h-full w-full overflow-hidden ">
         <Link href={link}>
           {nftInfo?.isTitlePicture ?
-            <div className="card-title card-bordered w-96 h-32 justify-center">
+            <div className="card-title card-bordered w-full h-32 justify-center">
               <figure >
                 <img
                   src={nftInfo?.title}
