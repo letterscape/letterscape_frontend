@@ -83,11 +83,7 @@ export const spaceABI = [{
 		type: "string",
 		internalType: "string"
 	}],
-	outputs: [{
-		name: "",
-		type: "bool",
-		internalType: "bool"
-	}],
+	outputs: [],
 	stateMutability: "nonpayable"
 }, {
 	type: "function",

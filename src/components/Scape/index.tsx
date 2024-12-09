@@ -1,12 +1,24 @@
-import { AdscapeProperty } from '@/store/Adscape';
+import { ScapeProperty } from '@/store/Scape';
 import { observer } from 'mobx-react-lite';
 import { useEffect, useState } from 'react';
-import { adscapeStore, lsNFTStore } from '@/store';
+import { scapeStore, lsNFTStore } from '@/store';
 import { baseUrl } from '@/lib/axios';
 import { toHex } from 'viem';
 
+export const scapeType = (typeId: string): string => {
+  switch(typeId) {
+    case '1':
+      return 'header';
+    case '2':
+      return 'body';
+    case '3':
+      return 'footer';
+  }
+  return '';
+}
+
 // advertisement component
-const Adscape = ({isShow, chainId, hostname, originURI, positionId}: {isShow: boolean, chainId: string, hostname: string, originURI: string, positionId: string}) => {
+const Scape = ({isShow, chainId, hostname, originURI, positionId, typeId}: {isShow: boolean, chainId: string, hostname: string, originURI: string, positionId: string, typeId: string}) => {
 
   const { lsNFT } = lsNFTStore;
   const { genFp } = lsNFT;
@@ -28,7 +40,7 @@ const Adscape = ({isShow, chainId, hostname, originURI, positionId}: {isShow: bo
     const fetchImage = async () => {
       debugger
         try {
-            let fp = toHex(genFp({hostname, originURI, positionId}))
+            let fp = toHex(genFp({hostname, originURI, positionId, typeId}))
             const response = await fetch(`${baseUrl}/wnftInfo/fetch?fp=${fp}&chainId=${chainId}`);
 
             if (!response.ok) {
@@ -58,7 +70,7 @@ const Adscape = ({isShow, chainId, hostname, originURI, positionId}: {isShow: bo
 
   // useEffect(() => {
   //   function createTokenId() {
-  //     const adProperty: AdscapeProperty = {
+  //     const adProperty: ScapeProperty = {
   //       creator,
   //       hostname,
   //       originURI,
@@ -76,7 +88,7 @@ const Adscape = ({isShow, chainId, hostname, originURI, positionId}: {isShow: bo
   // }
   
   
-
+  
   return (
     <>
       {isShow && imageSrc &&
@@ -94,4 +106,4 @@ const Adscape = ({isShow, chainId, hostname, originURI, positionId}: {isShow: bo
   );
 }
 
-export default observer(Adscape);
+export default observer(Scape);

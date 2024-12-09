@@ -1,6 +1,10 @@
 import { spaceApi } from '@/api/space/space'
 import { successCode } from '@/lib/constants'
 import { makeAutoObservable } from 'mobx'
+import { client, walletClient } from '../EtherClient'
+import { wallet } from '../Wallet'
+import { base } from '../Base'
+import { spaceABI } from './abi'
 
 class Space {
 
@@ -8,7 +12,15 @@ class Space {
     makeAutoObservable(this)
   }
 
-  create = (content: SpaceContent) => {
+  create = async ({content, originURI}: {content: SpaceContent, originURI: string}) => {
+    const { request } = await client.simulateContract({
+      account: wallet.account,
+      address: base.spaceAddress,
+      abi: spaceABI,
+      args: [content.contentId, content.title, content.resource, originURI],
+      functionName: 'create'
+    })
+    const txHash = await walletClient.writeContract(request)
     spaceApi.create(content).then(resp => {
       if (resp && resp.code === successCode) {
         alert("success");
@@ -20,7 +32,15 @@ class Space {
     })
   }
 
-  publish = (contentId: string) => {
+  publish = async (contentId: string) => {
+    const { request } = await client.simulateContract({
+      account: wallet.account,
+      address: base.spaceAddress,
+      abi: spaceABI,
+      args: [contentId, true],
+      functionName: 'setShowStatus'
+    })
+    const txHash = await walletClient.writeContract(request)
     let params = {
       contentId: contentId
     }

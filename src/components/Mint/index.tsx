@@ -32,6 +32,7 @@ const NoTokenForm = () => {
     const title = formData.get('title') as string 
     // const to = formData.get('to') as string 
     const originURI = formData.get('originURI') as string
+    const typeId = formData.get('typeId') as string
     const positionId = formData.get('positionId') as string
     const sellPrice = formData.get('sellPrice') as string 
     const interval = formData.get('interval') as string
@@ -48,7 +49,8 @@ const NoTokenForm = () => {
       creator: address,
       hostname,
       originURI,
-      positionId
+      positionId,
+      typeId
     }
     const tokenId = genTokenId(tokenIdProperty)
     debugger
@@ -96,6 +98,10 @@ const NoTokenForm = () => {
             originURI
             <input name="originURI" type="text" className="grow" placeholder="originURI" onChange={handleURLChange} required />
             {showGo && <button onClick={handleGo} type="button"><kbd>Go</kbd></button>}
+          </label>
+          <label className="input input-bordered input-primary flex items-center gap-2">
+            typeId
+            <input name="typeId" type="text" className="grow" placeholder="typeId of NFT" required />
           </label>
           <label className="input input-bordered input-primary flex items-center gap-2">
             positionId

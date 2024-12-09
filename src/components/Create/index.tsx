@@ -9,11 +9,15 @@ import { successCode } from "@/lib/constants";
 import { spaceStore } from "@/store";
 import { SpaceContent } from "@/store/Space";
 import { useAccount } from "wagmi";
+import getConfig from "next/config";
 
 
 const Create = () => {
   const router = useRouter();
   const account = useAccount();
+  
+  const { publicRuntimeConfig } = getConfig();
+  const baseUrl = publicRuntimeConfig.baseUrl;
 
   const { space } = spaceStore;
   const { create } = space;
@@ -46,7 +50,11 @@ const Create = () => {
           label: 0,
           isShown: false
         } as SpaceContent
-        await create(content);
+        let params = {
+          content: content,
+          originURI: `${baseUrl}/contents/${contentId}`
+        }
+        await create(params);
         router.push("/contents").then(() => {
           router.reload();
         });

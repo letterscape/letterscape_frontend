@@ -2,11 +2,64 @@ import { spaceApi } from "@/api/space/space";
 import { successCode } from "@/lib/constants";
 import { SpaceContent } from "@/store/Space";
 import { observer } from "mobx-react-lite";
-import { useRouter } from "next/router";
+import router, { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import DOMPurify from "dompurify";
+import parse, { DOMNode, Element, Text } from "html-react-parser";
+import React from "react";
+import Scape from "../Scape";
+import { useAccount } from "wagmi";
+import getConfig from "next/config";
 
-const Avatars = ({avatars}: {avatars: string[]}) => {
+const Body = ({htmlContent, interval}: {htmlContent: string, interval: number}) => {
+
+  const { publicRuntimeConfig } = getConfig();
+  const baseUrl = publicRuntimeConfig.baseUrl;
+
+  const { id } = router.query;
+  const account = useAccount();
+
+  // resovle html to DOM node array
+  const contentNodes = parse(htmlContent, {
+    replace: (domNode) => {
+      if (domNode instanceof Element && domNode.tagName === "p") {
+        // 提取 <p> 标签内容
+        const textContent = domNode.children
+          .map((child) =>
+            child.nodeType === 3 ? (child as Text).data : null
+          )
+          .join("");
+        return <p>{textContent}</p>;
+      }
+      return domNode;
+    },
+  });
+
+  const contentWithResrouce: JSX.Element[] = [];
+  let pCounter = 0;
+  let pInterval = 0;
+
+  React.Children.forEach(contentNodes, (node, index) => {
+    if (React.isValidElement(node) && node.type === "p") {
+      contentWithResrouce.push(node);
+      pCounter++;
+
+      // insert resource
+      if (pCounter % interval === 0) {
+        pInterval++;
+        contentWithResrouce.push(<Scape key={`scape-${index}`} isShow={true} chainId={String(account.chainId)} hostname={baseUrl} originURI={`${baseUrl}/contents/${id}`} positionId={String(pInterval)} typeId={'2'}/>);
+      }
+    } else {
+      // not <p> tag
+      contentWithResrouce.push(node as JSX.Element);
+    }
+  });
+
+  console.log("pInterval: ", pInterval);
+  return <div className="space-y-5">{contentWithResrouce}</div>;
+}
+
+const Footer = ({avatars}: {avatars: string[]}) => {
 
   const maxVisible = 5;
 
@@ -45,6 +98,7 @@ const SpaceDetail = () => {
       let params = {
         id: id,
       }
+      debugger
       spaceApi.info(params).then(resp => {
         if (resp && resp.code === successCode) {
 
@@ -85,9 +139,14 @@ const SpaceDetail = () => {
     }
   };
 
+  
+
   useEffect(() => {
-    info();
-  }, [])
+    if (id) {
+      info();
+    }
+  }, [id])
+
 
   if (loading) {
     return <div>Loading...</div>;
@@ -111,7 +170,7 @@ const SpaceDetail = () => {
       <div className="text-sm text-gray-600 mb-6">
         <span>By {content?.author}</span>
       </div>
-      <div className="space-y-3 mb-3">
+      {/* <div className="space-y-3 mb-3">
         <div className="chat chat-start">
           <div className="chat-image avatar">
             <div className="w-10 rounded-full">
@@ -142,13 +201,17 @@ const SpaceDetail = () => {
           </div>
           <div className="chat-bubble chat-bubble-info">That's awsome</div>
         </div>
+      </div> */}
+      <div className="space-y-5 mb-6"
+        // dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(contentBody) }}
+      >
+        <Body htmlContent={contentBody} interval={2}/>
       </div>
-      <div className="space-y-5"
-        dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(contentBody) }}
-      />
-      <div>
-        <Avatars avatars={avatarUrls}/>
-      </div>
+      {avatarUrls && avatarUrls.length > 0 &&
+        <div>
+          <Footer avatars={avatarUrls}/>
+        </div>
+      }
     </div>
   );
 }

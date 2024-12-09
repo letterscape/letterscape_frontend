@@ -79,23 +79,23 @@ class LsNFT {
     return data as string;
   }
 
-  genTokenId = ({creator, hostname, originURI, positionId}: {creator: `0x${string}`, hostname: string, originURI: string, positionId: string}): `0x${string}` => {
+  genTokenId = ({creator, hostname, originURI, positionId, typeId}: {creator: `0x${string}`, hostname: string, originURI: string, positionId: string, typeId: string}): `0x${string}` => {
     if (Number(positionId) > 127) {
       throw new Error("positionId too long");
     }
 
-    const tokenId = (hexToBigInt(creator) << BigInt(96)) + this.genFp({hostname, originURI, positionId});
+    const tokenId = (hexToBigInt(creator) << BigInt(96)) + this.genFp({hostname, originURI, positionId, typeId});
     return toHex(tokenId);
   }
 
-  genFp = ({hostname, originURI, positionId}: {hostname: string, originURI: string, positionId: string}): bigint => {
+  genFp = ({hostname, originURI, positionId, typeId}: {hostname: string, originURI: string, positionId: string, typeId: string}): bigint => {
     const websiteHex: string = keccak256(encodePacked(['string'], [hostname]));
     const websiteFp = websiteHex.slice(0, 10) as `0x${string}`;
 
     const uriHex: string = keccak256(encodePacked(['string'], [originURI]));
     const uriFp = uriHex.slice(0, 10) as `0x${string}`;
 
-    return (hexToBigInt(websiteFp) << BigInt(64)) + (hexToBigInt(uriFp) << BigInt(32)) + BigInt(positionId);
+    return (hexToBigInt(websiteFp) << BigInt(64)) + (hexToBigInt(uriFp) << BigInt(32)) + (BigInt(typeId) << BigInt(24)) + BigInt(positionId);
   }
 
   getCreator = (tokenId: `0x${string}`): string | undefined => {

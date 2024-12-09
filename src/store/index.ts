@@ -6,7 +6,7 @@ import { wallet } from './Wallet';
 import { market } from './Market';
 import { lsNFT } from './LsNFT';
 import { posts } from './Posts';
-import { adscape } from './Adscape';
+import { scape } from './Scape';
 import { space } from './Space';
 
 configure({ enforceActions: 'always' }); // 任何状态都能只能通过actions来修改，在实际开发中也包括新建状态。
@@ -24,5 +24,5 @@ export const walletStore = { wallet };
 export const marketStore = { market };
 export const lsNFTStore = { lsNFT };
 export const postsStore = { posts };
-export const adscapeStore = { adscape };
+export const scapeStore = { scape };
 export const spaceStore= { space };

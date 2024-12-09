@@ -1,7 +1,7 @@
 import { makeAutoObservable } from 'mobx';
 import { encodePacked, hexToBigInt, keccak256, toHex } from 'viem';
 
-class Adscape {
+class Scape {
 
   constructor() {
     makeAutoObservable(this); 
@@ -12,12 +12,12 @@ class Adscape {
   }
 }
 
-export type AdscapeProperty = {
+export type ScapeProperty = {
   creator: `0x${string}`
   hostname: string
   originURI: string
   positionId: string
 }
 
-const adscape = new Adscape();
-export {adscape};
+const scape = new Scape();
+export {scape};
