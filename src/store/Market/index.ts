@@ -41,16 +41,18 @@ class Market {
     }
 
     const creator = lsNFT.getCreator(tokenId);
+    let realPrice = price * symbolDimension(Number(wallet.chainId));
     let mintfee = BigInt(0);
     debugger
     if (!firstCreate && wallet.account !== creator) {
-      mintfee = await this.getMintFee(tokenId) as bigint
+      mintfee = await this.getMintFee(realPrice) as bigint
     }
+    debugger
     const { request } = await client.simulateContract({
       account: wallet.account,
       address: base.marketAddress,
       abi: marketABI,
-      args: [hexToBigInt(tokenId), price * symbolDimension(Number(wallet.chainId)), interval, originURI],
+      args: [hexToBigInt(tokenId), realPrice, interval, originURI],
       functionName: 'mint',
       value: mintfee
     })
@@ -192,12 +194,12 @@ class Market {
     })
   }
 
-  getMintFee = async (tokenId: `0x${string}`) => {
+  getMintFee = async (price: bigint) => {
     const data = await client.readContract({
       account: wallet.account,
       address: base.marketAddress,
       abi: marketABI,
-      args: [tokenId],
+      args: [price],
       functionName: 'getMintFee',
     })
     return data

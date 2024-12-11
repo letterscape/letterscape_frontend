@@ -62,7 +62,7 @@ const NoTokenForm = () => {
       title: title,
       hostname: hostname,
       originURI: originURI,
-      firstCreate: false
+      firstCreate: true
     }
     // debugger
     await mint(params);
@@ -140,6 +140,7 @@ const TokenForm = () => {
   const [showGo, setShowGo] = useState(false);
   const [tokenId, setTokenId] = useState('')
   const [mintfee, setMintfee] = useState('0');
+  const [sellPrice, setSellPrice] = useState<bigint>(BigInt(0));
 
   async function submit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -169,7 +170,7 @@ const TokenForm = () => {
       title: title,
       hostname: undefined,
       originURI: originURI,
-      firstCreate: true
+      firstCreate: false
     }
     debugger
     await mint(params);
@@ -201,6 +202,19 @@ const TokenForm = () => {
     const originURI = await getOriginURI(tokenId);
     setURI(originURI);
   }
+  
+  async function handleSellPriceChange(event: ChangeEvent<HTMLInputElement>): Promise<void> {
+    debugger
+    if (!(event.target.value)) {
+      return;
+    }
+    const value = BigInt(event.target.value);
+    
+    if (value <= 0) {
+      return
+    }
+    setSellPrice(value);
+  }
 
   async function onMintDialog(event: React.MouseEvent<HTMLButtonElement, MouseEvent>) {
     event.preventDefault();
@@ -212,13 +226,13 @@ const TokenForm = () => {
 
     const element = document.getElementById('mint_modal') as HTMLDialogElement | null;
     element!.showModal();
-    debugger
+
     if (account.address === getCreator(tokenId as `0x${string}`)) {
       setMintfee('0');
       return ;
     }
 
-    let mintfee = await getMintFee(tokenId as `0x${string}`) as bigint;
+    let mintfee = await getMintFee(sellPrice * BigInt(symbolDimension(account.chainId))) as bigint;
     // debugger
     const mintfeeStr = divideBigIntWithDecimal(mintfee, symbolDimension(account.chainId), symbolDecimal(account.chainId))
     setMintfee(mintfeeStr);
@@ -231,7 +245,7 @@ const TokenForm = () => {
 
   return (
     <>
-      <form onSubmit={submit} >
+      <form className="token_form" onSubmit={submit} >
         <div className='space-y-12'>
           <label className="input input-bordered input-primary flex items-center gap-2">
             Title
@@ -248,7 +262,7 @@ const TokenForm = () => {
           </label>
           <label className="input input-bordered input-primary flex items-center gap-2">
             sellPrice
-            <input name="sellPrice" type="text" className="grow" placeholder="set a sell price for NFT" required />
+            <input name="sellPrice" type="text" className="grow" placeholder="set a sell price for NFT" required onChange={handleSellPriceChange}/>
             <span>{symbol(account.chainId)}</span>
           </label>
           <label className="input input-bordered input-primary flex items-center gap-2">

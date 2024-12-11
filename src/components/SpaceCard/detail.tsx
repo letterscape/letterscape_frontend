@@ -170,7 +170,7 @@ const SpaceDetail = () => {
       <div className="text-sm text-gray-600 mb-6">
         <span>By {content?.author}</span>
       </div>
-      {/* <div className="space-y-3 mb-3">
+      <div className="space-y-3 mb-3">
         <div className="chat chat-start">
           <div className="chat-image avatar">
             <div className="w-10 rounded-full">
@@ -201,7 +201,7 @@ const SpaceDetail = () => {
           </div>
           <div className="chat-bubble chat-bubble-info">That's awsome</div>
         </div>
-      </div> */}
+      </div>
       <div className="space-y-5 mb-6"
         // dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(contentBody) }}
       >
