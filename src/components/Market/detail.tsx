@@ -13,6 +13,7 @@ import { ArrowTopRightOnSquareIcon } from "@heroicons/react/24/outline";
 import { useAccount } from "wagmi";
 import { marketStore } from "@/store";
 import { divideBigIntWithDecimal, truncateDynamic } from "@/lib/utils";
+import { wnftResrouceApi } from "@/api/wnft/resource";
 
 let timeLeft = {
   day: 0,
@@ -123,7 +124,7 @@ const MarketDetail = () => {
     router.back();
   };
 
-  const { getFpFromTokenId } = lsNFT;
+  const { getFpFromTokenId, getTypeIdFromTokenId } = lsNFT;
   const { market } = marketStore;
   const { list, buy, burn, getHoldFee } = market;
 
@@ -132,6 +133,9 @@ const MarketDetail = () => {
   const [error, setError] = useState(null);
 
   const [imageSrc, setImageSrc] = useState('');
+  const [resourceText, setResourceText] = useState('');
+  const [resourceURL, setResourceURL] = useState('');
+
   const [shouldBurn, setShouldBurn] = useState(false);
   const handleBurnChange = (value: boolean) => {
     setShouldBurn(value);
@@ -174,7 +178,7 @@ const MarketDetail = () => {
           return wnftDetail
         }
       }).then((wnft) =>{
-        fetchImage(wnft)
+        findResource(wnft)
       }).catch((error) => {
         console.log(error);
       })
@@ -186,10 +190,34 @@ const MarketDetail = () => {
     }
   }
   
-  const fetchImage = async (wnftInfo: WnftInfo) => {
+  const findResource = async (wnftInfo: WnftInfo) => {
+    let fp = getFpFromTokenId(wnftInfo.tokenId)
+    const params = {
+      fp: fp,
+      chainId: wnftInfo.chainId
+    }
+    wnftResrouceApi.find(params).then(resp => {
+      if (resp && resp.code === successCode) {
+        const resource = JSON.parse(resp.data);
+        setResourceText(resource.text);
+        setResourceURL(resource.url);
+        return resource.resourceId;
+      } else {
+        alert(resp.msg);
+        return undefined;
+      }
+    }).then((resourceId) =>{
+      fetchImage(resourceId);
+    }).catch((error) => {
+      console.log(error);
+    })
+  };
+  const fetchImage = async (resourceId: string | undefined) => {
     try {
-      let fp = getFpFromTokenId(wnftInfo.tokenId)
-      const response = await fetch(`${baseUrl}/wnftInfo/fetch?fp=${fp}&chainId=${wnftInfo.chainId}`);
+      if (!resourceId) {
+        return
+      }
+      const response = await fetch(`${baseUrl}/resource/fetch?resourceId=${resourceId}`);
 
       if (!response.ok) {
         console.log("fetch error:", response)
@@ -222,7 +250,7 @@ const MarketDetail = () => {
     const element = document.getElementById('buy_modal') as HTMLDialogElement | null;
     element!.showModal();
     let holdfee = await getHoldFee(wnftDetail.tokenId) as bigint;
-    // debugger
+    // 
     const holdfeeStr = divideBigIntWithDecimal(holdfee, symbolDimension(Number(wnftDetail.chainId)), symbolDecimal(Number(wnftDetail.chainId)))
     setHoldFee(holdfeeStr);
   }
@@ -282,12 +310,34 @@ const MarketDetail = () => {
       
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
           {/* tokenURI resource */}
-          <div className="flex justify-center bg-gray-200">
-
-            <div style={{ margin: '20px 20px' }}>
-              <img src={imageSrc} style={{ maxWidth: '100%' }}></img>
-            </div>
+          <div className="h-full">
+            <form id="resource_form" className="h-full flex flex-col justify-between">
+              {getTypeIdFromTokenId(wnftDetail.tokenId) === '1' && 
+                <div className="flex gap-3">
+                  <p className="flex text-gray-700 mb-6 items-center font-bold">
+                    Text
+                  </p>
+                  <label className="input input-bordered input-primary flex items-center gap-2 mb-6 w-full">
+                    <input name="text" value={resourceText} type="text" className="grow" disabled/>
+                  </label>
+                </div>
+              }
+              <div className="flex gap-3">
+                <p className="flex text-gray-700 mb-6 items-center font-bold">
+                  URL
+                </p>
+                <label className="input input-bordered input-primary flex items-center gap-2 mb-6 w-full">
+                  <input name="url" value={resourceURL} type="text" className="grow" disabled/>
+                </label>
+              </div>
+              <div className="flex h-full justify-center bg-gray-200">
+                <div className="flex gap-3" style={{ margin: '20px 20px' }}>
+                  <img src={imageSrc} style={{ maxWidth: '100%' }}></img>
+                </div>
+              </div>
+            </form>
           </div>
+          
 
           {/* nft info */}
           <div className="flex flex-col justify-center">

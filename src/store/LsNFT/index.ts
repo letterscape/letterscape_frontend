@@ -4,6 +4,7 @@ import { base } from '../Base';
 import {
   encodePacked,
   hexToBigInt,
+  hexToNumber,
   keccak256,
   toHex,
 } from 'viem';
@@ -34,7 +35,7 @@ class LsNFT {
   nftGoodsMap: Map<string, number> = new Map();
 
   initNftGoods = (title: string, tokenId: `0x${string}`, originURI: string): NFTGoods => {
-    debugger
+    
     const nftGoods: NFTGoods = {
       id: toHex(tokenId),
       title: title,
@@ -60,10 +61,10 @@ class LsNFT {
       account: wallet.account,
     })
     wallet.walletClient.writeContract(request).then(async resp => {
-      debugger
+      
       console.log("resp: ", resp);
     }).catch(error => {
-      debugger
+      
       console.log("setMarket error: ", error);
     });
   }
@@ -110,7 +111,14 @@ class LsNFT {
     if (tokenId && tokenId.length >= 66) {
       return `0x${tokenId.slice(42, tokenId.length)}`
     }
-    return '0x0'
+    return '0x0';
+  }
+
+  getTypeIdFromTokenId = (tokenId: `0x${string}`): string => {
+    if (tokenId && tokenId.length >= 66) {
+      return String(hexToNumber(`0x${tokenId.substring(58, 60)}`));
+    }
+    return '';
   }
 
   getTokenURI = async (tokenId: `0x${string}`) => {
@@ -147,7 +155,7 @@ class LsNFT {
   }
 
   getTokenIds = async () => {
-    debugger
+    
     const data = await client.readContract({
       address: base.nftAddress,
       abi: lsNFTABI,
@@ -167,7 +175,7 @@ class LsNFT {
         args: [tokenId],
         account: wallet.account,
       });
-      // debugger
+      // 
       const wnft = data as WLSNFT;
       const isExpired = await this.detectExpired(tokenId.valueOf()) as boolean;
       wnft.isExpired = isExpired
@@ -232,9 +240,9 @@ class LsNFT {
       ...params,
       owner: wallet.account
     }
-    debugger
+    
     await wnftApi.page(pageParams).then(resp => {
-      debugger
+      
       if (resp && resp.code === successCode) {
         this.wnftInfoList = resp.data.list
       } else {

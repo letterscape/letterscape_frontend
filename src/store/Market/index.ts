@@ -43,11 +43,11 @@ class Market {
     const creator = lsNFT.getCreator(tokenId);
     let realPrice = price * symbolDimension(Number(wallet.chainId));
     let mintfee = BigInt(0);
-    debugger
+    
     if (!firstCreate && wallet.account !== creator) {
       mintfee = await this.getMintFee(realPrice) as bigint
     }
-    debugger
+    
     const { request } = await client.simulateContract({
       account: wallet.account,
       address: base.marketAddress,
@@ -57,7 +57,7 @@ class Market {
       value: mintfee
     })
     const txHash = await walletClient.writeContract(request)
-    debugger
+    
     let params = {
       tokenId: tokenId,
       chainId: wallet.chainId,
@@ -79,7 +79,7 @@ class Market {
   list = async (wnft: WnftInfo) => {
     console.log('list nft: ', toHex(wnft.tokenId))
     const nonces = await this.getNonces() as bigint
-    debugger
+    
     const tokenId = hexToBigInt(wnft.tokenId)
     const sellerSign = await wallet.walletClient.signTypedData({
       domain,
@@ -117,7 +117,7 @@ class Market {
 
   buy = async (wnftId: string, tokenId: `0x${string}`, buyPrice: bigint, sellPrice: bigint) => {
     console.log('buy nft: ', tokenId)
-    debugger
+    
     const holdfee = await this.getHoldFee(tokenId) as bigint
     
     const { request } = await client.simulateContract({

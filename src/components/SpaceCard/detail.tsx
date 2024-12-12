@@ -98,7 +98,7 @@ const SpaceDetail = () => {
       let params = {
         id: id,
       }
-      debugger
+      
       spaceApi.info(params).then(resp => {
         if (resp && resp.code === successCode) {
 
@@ -127,7 +127,7 @@ const SpaceDetail = () => {
         resource: resource,
       }
       spaceApi.fetch(param).then(resp => {
-        debugger
+        
         if (resp && resp.code === successCode) {
           setContentBody(resp.data);
         } else {
