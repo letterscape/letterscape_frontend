@@ -20,7 +20,7 @@ const Buttons = ({content}: {content: SpaceContent}) => {
 
   const handlePublish = async (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
     event.preventDefault();
-    debugger
+    
     if (content) {
       await publish(content.contentId);
       router.push('/space')

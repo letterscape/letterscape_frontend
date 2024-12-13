@@ -65,20 +65,4 @@ export const wnftApi =  {
       data: params
     }).then(res => res.data)
   },
-
-  upload (params: any) {
-    return axios({
-      method: 'post',
-      url: `${baseUrl}/wnftInfo/upload`,
-      data: params
-    }).then(res => res.data)
-  },
-
-  fetch (params: any) {
-    return axios({
-      method: 'post',
-      url: `${baseUrl}/wnftInfo/fetch`,
-      params
-    }).then(res => res.data)
-  },
 } 

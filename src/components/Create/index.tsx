@@ -36,9 +36,9 @@ const Create = () => {
       content: draft
     }
     spaceApi.upload(param).then(async resp => {
-      debugger
+      
       if (resp && resp.code === successCode) {
-        debugger
+        
         const cid = resp.data;
         let content = {
           contentId: contentId,

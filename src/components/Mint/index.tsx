@@ -41,7 +41,7 @@ const NoTokenForm = () => {
     if (!originURI || originURI.length == 0) {
       alert("originURI cannot be empty")
     }
-    debugger
+    
     const hostname = new URL(originURI).origin;
     console.log("hostname: ", hostname);
 
@@ -53,7 +53,7 @@ const NoTokenForm = () => {
       typeId
     }
     const tokenId = genTokenId(tokenIdProperty)
-    debugger
+    
     let params = {
       tokenId: tokenId,
       chainId: account.chainId,
@@ -64,9 +64,9 @@ const NoTokenForm = () => {
       originURI: originURI,
       firstCreate: true
     }
-    // debugger
+    // 
     await mint(params);
-
+    alert("mint success");
     router.push("/lists").then(() => {
       router.reload();
     });
@@ -172,7 +172,7 @@ const TokenForm = () => {
       originURI: originURI,
       firstCreate: false
     }
-    debugger
+    
     await mint(params);
     router.push('/lists');
   }
@@ -191,7 +191,7 @@ const TokenForm = () => {
   }
 
   async function handleTokenIdChange(event: ChangeEvent<HTMLInputElement>): Promise<void> {
-    debugger
+    
     const value = event.target.value;
     if (!value || value =="" || (value && !value.includes('0x')) || value.length < 66) {
       return;
@@ -204,7 +204,7 @@ const TokenForm = () => {
   }
   
   async function handleSellPriceChange(event: ChangeEvent<HTMLInputElement>): Promise<void> {
-    debugger
+    
     if (!(event.target.value)) {
       return;
     }
@@ -233,7 +233,7 @@ const TokenForm = () => {
     }
 
     let mintfee = await getMintFee(sellPrice * BigInt(symbolDimension(account.chainId))) as bigint;
-    // debugger
+    // 
     const mintfeeStr = divideBigIntWithDecimal(mintfee, symbolDimension(account.chainId), symbolDecimal(account.chainId))
     setMintfee(mintfeeStr);
   }

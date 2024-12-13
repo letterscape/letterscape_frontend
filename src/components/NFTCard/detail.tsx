@@ -11,6 +11,7 @@ import TransactionEcharts from "@/components/Echarts/transactions"
 import { chainName, symbol, symbolDecimal, symbolDimension } from '@/lib/chainTerms';
 import { divideBigIntWithDecimal, formatTimestampToDateTime, truncateDynamic } from '@/lib/utils';
 import { ArrowTopRightOnSquareIcon, PencilSquareIcon } from '@heroicons/react/24/outline';
+import { wnftResrouceApi } from '@/api/wnft/resource';
 
 const UploadFile = ({url, sendDataToParent, src} : {url: string, sendDataToParent: (arg0: string) => void, src: any}) => {
   
@@ -27,7 +28,7 @@ const UploadFile = ({url, sendDataToParent, src} : {url: string, sendDataToParen
   }, [src])
 
   const handleFileChange = (event: any) => {
-    debugger
+    
     const file = event.target.files[0];
     if (file) {
       setFileType(file.type);
@@ -79,12 +80,14 @@ const UploadFile = ({url, sendDataToParent, src} : {url: string, sendDataToParen
           <button
             onClick={() => handleUpload(url)}
             className="absolute top-2 left-2 bg-blue-500 text-white px-2 py-1 rounded-full text-xs hover:bg-blue-600"
+            type="button"
           >
             Upload
           </button>
           <button
             onClick={handleRemove}
             className="absolute top-2 right-2 bg-red-500 text-white px-2 py-1 rounded-full text-xs hover:bg-red-600"
+            type="button"
           >
             Remove
           </button>
@@ -113,7 +116,7 @@ const NFTDetail = () => {
   };
   
   const { lsNFT } = lsNFTStore;
-  const { setTokenURI, getFpFromTokenId } = lsNFT;
+  const { setTokenURI, getFpFromTokenId, getTypeIdFromTokenId } = lsNFT;
   const { market } = marketStore;
   const { burn, getHoldFee, payHoldFee } = market;
 
@@ -141,6 +144,9 @@ const NFTDetail = () => {
     isTitlePicture: false
   });
   const [imageSrc, setImageSrc] = useState('');
+  const [newResourceId, setNewResourceId] = useState('');
+  const [resourceText, setResourceText] = useState('');
+  const [resourceURL, setResourceURL] = useState('');
 
   const [holdfeeStr, setHoldfeeStr] = useState("0");
   const [holdfee, setHoldfee] = useState(BigInt(0));
@@ -161,7 +167,7 @@ const NFTDetail = () => {
           return wnftDetail
         }
       }).then((wnft) =>{
-        fetchImage(wnft)
+        findResource(wnft)
       }).catch((error) => {
         console.log(error);
       })
@@ -172,10 +178,34 @@ const NFTDetail = () => {
       setLoading(false);
     }
   };
-  const fetchImage = async (wnftInfo: WnftInfo) => {
+  const findResource = async (wnftInfo: WnftInfo) => {
+    let fp = getFpFromTokenId(wnftInfo.tokenId)
+    const params = {
+      fp: fp,
+      chainId: wnftInfo.chainId
+    }
+    wnftResrouceApi.find(params).then(resp => {
+      if (resp && resp.code === successCode) {
+        const resource = JSON.parse(resp.data);
+        setResourceText(resource.text);
+        setResourceURL(resource.url);
+        return resource.resourceId;
+      } else {
+        alert(resp.msg);
+        return undefined;
+      }
+    }).then((resourceId) =>{
+      fetchImage(resourceId);
+    }).catch((error) => {
+      console.log(error);
+    })
+  };
+  const fetchImage = async (resourceId: string | undefined) => {
     try {
-      let fp = getFpFromTokenId(wnftInfo.tokenId)
-      const response = await fetch(`${baseUrl}/wnftInfo/fetch?fp=${fp}&chainId=${wnftInfo.chainId}`);
+      if (!resourceId) {
+        return
+      }
+      const response = await fetch(`${baseUrl}/resource/fetch?resourceId=${resourceId}`);
 
       if (!response.ok) {
         console.log("fetch error:", response)
@@ -210,7 +240,7 @@ const NFTDetail = () => {
         element.checked = false;
         setIsEdit(false);
       }
-      debugger
+      
       detail();
     };
 
@@ -229,7 +259,15 @@ const NFTDetail = () => {
     }));
   }
 
-  function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
+  function handleResourceTextChange(e: ChangeEvent<HTMLInputElement>) {
+    setResourceText(e.target.value);
+  }
+
+  function handleResourceURLChange(e: ChangeEvent<HTMLInputElement>) {
+    setResourceURL(e.target.value);
+  }
+
+  function handleTokenDetailSubmit(e: React.FormEvent<HTMLFormElement>) {
 
     e.preventDefault();
     const formData = new FormData(e.target as HTMLFormElement);
@@ -251,7 +289,33 @@ const NFTDetail = () => {
 
   const handleDataFromUpload = (data: any) => {
     console.log("from upload data: ", data);
-    setTokenURI(wnftDetail.tokenId, data) // tokenURI = cid
+    setNewResourceId(data);
+  }
+
+  function handleResourceSubmit(e: React.FormEvent<HTMLFormElement>) {
+    e.preventDefault();
+    const formData = new FormData(e.target as HTMLFormElement);
+    const url = formData.get('url') as string
+    const text = formData.get('text') as string
+    let params = {
+      resourceId: newResourceId,
+      typeId: getTypeIdFromTokenId(wnftDetail.tokenId),
+      url: url,
+      text: text
+    }
+    
+    wnftResrouceApi.save(params).then(resp => {
+      if (resp && resp.code === successCode) {
+        
+        const cid = resp.data;
+        setTokenURI(wnftDetail.tokenId, cid) // tokenURI = cid
+        alert("save success");
+      } else {
+        alert(resp.msg);
+      }
+    }).catch((error) => {
+      console.log(error);
+    })
   }
 
   const onEditClick = () => {
@@ -287,7 +351,7 @@ const NFTDetail = () => {
     element!.showModal();
     let holdfee = await getHoldFee(wnftDetail.tokenId) as bigint;
     setHoldfee(holdfee);
-    // debugger
+    // 
     const holdfeeStr = divideBigIntWithDecimal(holdfee, symbolDimension(Number(wnftDetail.chainId)), symbolDecimal(Number(wnftDetail.chainId)))
     setHoldfeeStr(holdfeeStr);
   }
@@ -323,126 +387,129 @@ const NFTDetail = () => {
           {'<-'}
         </button>
       </div> */}
-      <div className="container mx-auto p-6" style={{margin: '50px 50px'}}>
+      <div className="container mx-auto p-6 h-full">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-          <div className="flex justify-center bg-gray-200">
-            <UploadFile url={`${baseUrl}/wnftInfo/upload`} sendDataToParent={handleDataFromUpload} src={imageSrc}/>
-          </div>
-          <div className="flex flex-col justify-normal px-10">
-          <form onSubmit={handleSubmit}>
-            <div className="grid grid-cols-2">
-              {isEdit ?
-                <label className="input input-bordered input-primary flex items-center gap-2 mb-10">
-                  <p className="font-bold">Title</p>
-                  <input name="title" value={wnftDetail.title} type="text" className="grow" placeholder='set a title to NFT' onChange={handleChange} />
-                </label>
-                :
-                <div className="flex gap-2 mb-10">
-                  <h1 className="text-3xl font-bold mb-4">
-                    {wnftDetail.title}  
-                  </h1>
-                  <a href={wnftDetail.originUri} target="_blank" rel="noopener noreferrer">
-                    <ArrowTopRightOnSquareIcon className="size-5  text-blue-500"/>
-                  </a>
+          <div className="h-full">
+            <form id="resource_form" className="h-full flex flex-col justify-between" onSubmit={handleResourceSubmit}>
+              {getTypeIdFromTokenId(wnftDetail.tokenId) === '1' && 
+                <div className="flex gap-3">
+                  <p className="flex text-gray-700 mb-6 items-center font-bold">
+                    Text
+                  </p>
+                  <label className="input input-bordered input-primary flex items-center gap-2 mb-6 w-full">
+                    <input name="text" value={resourceText} type="text" className="grow" placeholder='write something' onChange={handleResourceTextChange} />
+                  </label>
                 </div>
               }
-              <div className="flex justify-end">
-                <label className="btn btn-circle swap swap-rotate">
-                  <input id="edit_input" type="checkbox" onClick={onEditClick}/>
-                  <svg
-                    className="swap-off fill-current"
-                    xmlns="http://www.w3.org/2000/svg"
-                    width="32"
-                    height="32"
-                    viewBox="0 0 512 512">
-                    <text x="25" y="350" fill="black" font-size="250" font-family="Arial">
-                      Edit
-                    </text>
-                  </svg>
-                  <svg
-                    className="swap-on fill-current"
-                    xmlns="http://www.w3.org/2000/svg"
-                    width="32"
-                    height="32"
-                    viewBox="0 0 512 512">
-                    <polygon
-                      points="400 145.49 366.51 112 256 222.51 145.49 112 112 145.49 222.51 256 112 366.51 145.49 400 256 289.49 366.51 400 400 366.51 289.49 256 400 145.49" />
-                  </svg>
-                </label>
-              </div>
-            </div>
-            <div className="grid grid-cols-2">
-              <p className="flex text-gray-700 mb-6">TokenId</p>
-              <div className="relative group">
-                <div className="truncate">
-                  {truncateDynamic(wnftDetail.tokenId, 23)}
+              {getTypeIdFromTokenId(wnftDetail.tokenId) !== '3' && 
+                <div className="flex gap-3">
+                  <p className="flex text-gray-700 mb-6 items-center font-bold">
+                    URL
+                  </p>
+                  <label className="input input-bordered input-primary flex items-center gap-2 mb-6 w-full">
+                    <input name="url" value={resourceURL} type="text" className="grow" placeholder='set url for the image' onChange={handleResourceURLChange} />
+                  </label>
                 </div>
-                <div className="absolute hidden group-hover:flex bg-gray-900 text-white text-sm p-2 rounded shadow-lg -top-8 left-0 z-50">
-                  {wnftDetail.tokenId}
-                </div>
+              }
+              <div className="flex h-full justify-center bg-gray-200">
+                <UploadFile url={`${baseUrl}/resource/upload`} sendDataToParent={handleDataFromUpload} src={imageSrc}/>
               </div>
-            </div>
-            <div className="grid grid-cols-2">
-              <p className="text-gray-700 mb-6">Chain</p>
-              <p className="text-gray-700 mb-6">{chainName(Number(wnftDetail.chainId))}</p>
-            </div>
-            {isEdit ?
+              <div className="mt-6">
+                <button 
+                  className="btn w-full rounded-md bg-gradient-to-r from-emerald-600/50 to-emerald-800/50 backdrop-blur-md text-white font-extrabold hover:from-emerald-700/60 hover:to-emerald-900/60 hover:scale-105 transition-transform duration-300" 
+                  type="submit">
+                  Save
+                </button>
+              </div>
+            </form>
+          </div>
+          
+          
+          <div className="flex flex-col justify-normal px-10">
+            <form className="token_detail_form" onSubmit={handleTokenDetailSubmit}>
               <div className="grid grid-cols-2">
-                <p className="flex text-gray-700 mb-6 items-center">
-                  Content
-                </p>
-                <label className="input input-bordered input-primary flex items-center gap-2 mb-6">
-                  <input name="content" value={wnftDetail.content} type="text" className="grow" placeholder='set content' onChange={handleChange} />
-                </label>
-              </div>
-              :
-              <div className="grid grid-cols-2">
-                <p className="flex text-gray-700 mb-6">
-                  Content
-                </p>
-                <p className="text-gray-700 mb-6">{wnftDetail.content}</p>
-              </div>
-            }
-            <div className="grid grid-cols-2">
-              <p className="text-gray-700 mb-6">Price</p>
-              <p className="text-gray-700 mb-6">{wnftDetail.price} {symbol(Number(wnftDetail.chainId))}</p>
-            </div>
-            <div className="grid grid-cols-2">
-              <p className="text-gray-700 mb-6">Deadline</p>
-              <p className="text-gray-700 mb-6">{formatTimestampToDateTime(wnftDetail.deadline)}</p>
-            </div>
-            {isEdit &&
-              <div className="grid grid-cols-1 mt-6">
-                <span className="">
-                  <button 
-                    className="btn w-full rounded-md bg-gradient-to-r from-emerald-600/50 to-emerald-800/50 backdrop-blur-md text-white font-extrabold hover:from-emerald-700/60 hover:to-emerald-900/60 hover:scale-105 transition-transform duration-300" 
-                    type="submit">
-                    Save
-                  </button>
-                </span>
-              </div>
-            }
-          </form>
-            
-            {/* <div style={{margin: '20px 0'}}>
-              <h1 className="text-3xl font-bold mb-4 text-center py-4">Edit</h1>
-              <form onSubmit={handleSubmit}>
-                <div className='space-y-12'>
-                <label className="input input-bordered input-primary flex items-center gap-2">
-                  OriginURI
-                  <input type="originURI" value={wnftDetail.originUri} placeholder='' className="input input-bordered w-full max-w-xs" disabled onChange={handleChange} />
-                  {wnftDetail?.originUri?.includes("http") && <button onClick={handleGo} type="button"><kbd>Go</kbd></button>}
-                </label>
-                  <label className="input input-bordered input-primary flex items-center gap-2">
-                    Title
+                {isEdit ?
+                  <label className="input input-bordered input-primary flex items-center gap-2 mb-10">
+                    <p className="font-bold">Title</p>
                     <input name="title" value={wnftDetail.title} type="text" className="grow" placeholder='set a title to NFT' onChange={handleChange} />
                   </label>
-                  <label className="input input-bordered input-primary flex items-center gap-2">
+                  :
+                  <div className="flex gap-2 mb-10">
+                    <h1 className="text-3xl font-bold mb-4">
+                      {wnftDetail.title}  
+                    </h1>
+                    <a href={wnftDetail.originUri} target="_blank" rel="noopener noreferrer">
+                      <ArrowTopRightOnSquareIcon className="size-5  text-blue-500"/>
+                    </a>
+                  </div>
+                }
+                <div className="flex justify-end">
+                  <label className="btn btn-circle swap swap-rotate">
+                    <input id="edit_input" type="checkbox" onClick={onEditClick}/>
+                    <svg
+                      className="swap-off fill-current"
+                      xmlns="http://www.w3.org/2000/svg"
+                      width="32"
+                      height="32"
+                      viewBox="0 0 512 512">
+                      <text x="25" y="350" fill="black" font-size="250" font-family="Arial">
+                        Edit
+                      </text>
+                    </svg>
+                    <svg
+                      className="swap-on fill-current"
+                      xmlns="http://www.w3.org/2000/svg"
+                      width="32"
+                      height="32"
+                      viewBox="0 0 512 512">
+                      <polygon
+                        points="400 145.49 366.51 112 256 222.51 145.49 112 112 145.49 222.51 256 112 366.51 145.49 400 256 289.49 366.51 400 400 366.51 289.49 256 400 145.49" />
+                    </svg>
+                  </label>
+                </div>
+              </div>
+              <div className="grid grid-cols-2">
+                <p className="flex text-gray-700 mb-6">TokenId</p>
+                <div className="relative group">
+                  <div className="truncate">
+                    {truncateDynamic(wnftDetail.tokenId, 23)}
+                  </div>
+                  <div className="absolute hidden group-hover:flex bg-gray-900 text-white text-sm p-2 rounded shadow-lg -top-8 left-0 z-50">
+                    {wnftDetail.tokenId}
+                  </div>
+                </div>
+              </div>
+              <div className="grid grid-cols-2">
+                <p className="text-gray-700 mb-6">Chain</p>
+                <p className="text-gray-700 mb-6">{chainName(Number(wnftDetail.chainId))}</p>
+              </div>
+              {isEdit ?
+                <div className="grid grid-cols-2">
+                  <p className="flex text-gray-700 mb-6 items-center">
                     Content
+                  </p>
+                  <label className="input input-bordered input-primary flex items-center gap-2 mb-6">
                     <input name="content" value={wnftDetail.content} type="text" className="grow" placeholder='set content' onChange={handleChange} />
                   </label>
                 </div>
-                <div className="grid grid-cols-1 mt-8">
+                :
+                <div className="grid grid-cols-2">
+                  <p className="flex text-gray-700 mb-6">
+                    Content
+                  </p>
+                  <p className="text-gray-700 mb-6">{wnftDetail.content}</p>
+                </div>
+              }
+              <div className="grid grid-cols-2">
+                <p className="text-gray-700 mb-6">Price</p>
+                <p className="text-gray-700 mb-6">{wnftDetail.price} {symbol(Number(wnftDetail.chainId))}</p>
+              </div>
+              <div className="grid grid-cols-2">
+                <p className="text-gray-700 mb-6">Deadline</p>
+                <p className="text-gray-700 mb-6">{formatTimestampToDateTime(wnftDetail.deadline)}</p>
+              </div>
+              {isEdit &&
+                <div className="grid grid-cols-1 mt-6">
                   <span className="">
                     <button 
                       className="btn w-full rounded-md bg-gradient-to-r from-emerald-600/50 to-emerald-800/50 backdrop-blur-md text-white font-extrabold hover:from-emerald-700/60 hover:to-emerald-900/60 hover:scale-105 transition-transform duration-300" 
@@ -451,8 +518,8 @@ const NFTDetail = () => {
                     </button>
                   </span>
                 </div>
-              </form>
-            </div> */}
+              }
+            </form>
             <div className="grid grid-cols-2 gap-6" style={{margin: '20px 0'}}>
               <div >
                 <button 

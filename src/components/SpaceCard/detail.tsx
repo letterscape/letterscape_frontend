@@ -11,10 +11,42 @@ import Scape from "../Scape";
 import { useAccount } from "wagmi";
 import getConfig from "next/config";
 
-const Body = ({htmlContent, interval}: {htmlContent: string, interval: number}) => {
+const { publicRuntimeConfig } = getConfig();
+const baseUrl = publicRuntimeConfig.baseUrl;
 
-  const { publicRuntimeConfig } = getConfig();
-  const baseUrl = publicRuntimeConfig.baseUrl;
+const Header = ({pathId}: {pathId: string}) => {
+
+  const account = useAccount();
+  const [counter, setCounter] = useState(0);
+
+  const maxVisible = 3;
+
+  const handleCount = (isUsed: boolean) => {
+    if (isUsed) {
+      setCounter(counter + 1);
+    }
+  }
+
+  return (
+    <div className="space-y-3 mb-3">
+      {Array.from({ length: maxVisible }, (_, index) => (
+        <Scape 
+          key={`scape-${index}`} 
+          isShow={true} 
+          chainId={String(account.chainId)} 
+          hostname={baseUrl} 
+          originURI={`${baseUrl}/contents/${pathId}`} 
+          positionId={String(index)} 
+          typeId={'1'}
+          sendDataToParent={handleCount}/>
+        ))
+      }
+    </div>
+  );
+}
+
+
+const Body = ({htmlContent, interval}: {htmlContent: string, interval: number}) => {
 
   const { id } = router.query;
   const account = useAccount();
@@ -35,6 +67,10 @@ const Body = ({htmlContent, interval}: {htmlContent: string, interval: number}) 
     },
   });
 
+  const handleChildData = () => {
+
+  }
+
   const contentWithResrouce: JSX.Element[] = [];
   let pCounter = 0;
   let pInterval = 0;
@@ -47,7 +83,17 @@ const Body = ({htmlContent, interval}: {htmlContent: string, interval: number}) 
       // insert resource
       if (pCounter % interval === 0) {
         pInterval++;
-        contentWithResrouce.push(<Scape key={`scape-${index}`} isShow={true} chainId={String(account.chainId)} hostname={baseUrl} originURI={`${baseUrl}/contents/${id}`} positionId={String(pInterval)} typeId={'2'}/>);
+        contentWithResrouce.push(
+          <Scape 
+            key={`scape-${index}`} 
+            isShow={true} 
+            chainId={String(account.chainId)} 
+            hostname={baseUrl} 
+            originURI={`${baseUrl}/contents/${id}`} 
+            positionId={String(pInterval)} 
+            typeId={'2'}
+            sendDataToParent={handleChildData}
+          />);
       }
     } else {
       // not <p> tag
@@ -59,25 +105,42 @@ const Body = ({htmlContent, interval}: {htmlContent: string, interval: number}) 
   return <div className="space-y-5">{contentWithResrouce}</div>;
 }
 
-const Footer = ({avatars}: {avatars: string[]}) => {
+const Footer = ({pathId}: {pathId: string}) => {
 
-  const maxVisible = 5;
+  const account = useAccount();
+  const [counter, setCounter] = useState(0);
+  var holdAmt = 0;
+  const maxHold = 100;
+
+  const maxVisible = 10;
+
+  const handleCount = (isUsed: boolean) => {
+    if (isUsed) {
+      holdAmt++
+      setCounter(holdAmt);
+      console.log("holder: ", holdAmt);
+    }
+  }
 
   return (
     <div className="flex">
       <div className="flex -space-x-3 overflow-hidden">
-        {avatars.slice(0, maxVisible - 1).map((avatar, index) => (
-          <img
-            key={index}
-            src={avatar}
-            alt={`Avatar ${index + 1}`}
-            className="w-12 h-12 rounded-full border-2 border-white object-cover"
-          />
-        ))}
+        {Array.from({ length: maxHold }, (_, index) => (
+            <Scape
+              key={`scape-${index}`} 
+              isShow={index <= maxVisible} 
+              chainId={String(account.chainId)} 
+              hostname={baseUrl} 
+              originURI={`${baseUrl}/contents/${pathId}`} 
+              positionId={String(index)} 
+              typeId={'3'}
+              sendDataToParent={handleCount}/>
+          ))
+        }
       </div>
-      {avatars.length > 0 &&
+      {counter > 0 &&
         <div className="flex items-center mx-1">
-          <p className="text-zinc-400">{avatars.length} holders</p>
+          <p className="text-zinc-400">{counter} holders</p>
         </div>
       }
     </div>
@@ -88,7 +151,9 @@ const SpaceDetail = () => {
   const router = useRouter();
   const { id } = router.query;
 
+  
   const [loading, setLoading] = useState(true);
+  const [pathId, setPathId] = useState('');
   const [title, setTitle] = useState('');
   const [contentBody, setContentBody] = useState('');
   const [content, setContent] = useState<SpaceContent>();
@@ -98,7 +163,7 @@ const SpaceDetail = () => {
       let params = {
         id: id,
       }
-      debugger
+      
       spaceApi.info(params).then(resp => {
         if (resp && resp.code === successCode) {
 
@@ -127,7 +192,7 @@ const SpaceDetail = () => {
         resource: resource,
       }
       spaceApi.fetch(param).then(resp => {
-        debugger
+        
         if (resp && resp.code === successCode) {
           setContentBody(resp.data);
         } else {
@@ -143,12 +208,13 @@ const SpaceDetail = () => {
 
   useEffect(() => {
     if (id) {
+      setPathId(id as string);
       info();
     }
   }, [id])
 
 
-  if (loading) {
+  if (!pathId || loading) {
     return <div>Loading...</div>;
   }
 
@@ -170,48 +236,17 @@ const SpaceDetail = () => {
       <div className="text-sm text-gray-600 mb-6">
         <span>By {content?.author}</span>
       </div>
-      <div className="space-y-3 mb-3">
-        <div className="chat chat-start">
-          <div className="chat-image avatar">
-            <div className="w-10 rounded-full">
-              <img
-                alt="Tailwind CSS chat bubble component"
-                src="https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.webp" />
-            </div>
-          </div>
-          <div className="chat-bubble chat-bubble-info">Good!</div>
-        </div>
-        <div className="chat chat-start">
-          <div className="chat-image avatar">
-            <div className="w-10 rounded-full">
-              <img
-                alt="Tailwind CSS chat bubble component"
-                src="https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.webp" />
-            </div>
-          </div>
-          <div className="chat-bubble chat-bubble-info">Excellent!</div>
-        </div>
-        <div className="chat chat-start">
-          <div className="chat-image avatar">
-            <div className="w-10 rounded-full">
-              <img
-                alt="Tailwind CSS chat bubble component"
-                src="https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.webp" />
-            </div>
-          </div>
-          <div className="chat-bubble chat-bubble-info">That's awsome</div>
-        </div>
+      <div>
+        <Header pathId={pathId}/>
       </div>
       <div className="space-y-5 mb-6"
         // dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(contentBody) }}
       >
         <Body htmlContent={contentBody} interval={2}/>
       </div>
-      {avatarUrls && avatarUrls.length > 0 &&
-        <div>
-          <Footer avatars={avatarUrls}/>
-        </div>
-      }
+      <div>
+        <Footer pathId={pathId}/>
+      </div>
     </div>
   );
 }

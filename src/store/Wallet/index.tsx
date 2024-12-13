@@ -33,7 +33,6 @@ export class Wallet {
   }
 
   putAccountAddress = (param : any) => {
-    debugger
     if (param!.address) {
       this.account = param!.address;
     }
@@ -44,7 +43,6 @@ export class Wallet {
   }
 
   createWalletClient = () => {
-    // debugger
     // let walletTransport = transport
     // if (typeof etherWindow !== "undefined") {
     //   walletTransport = custom(etherWindow.ethereum!)
@@ -60,7 +58,7 @@ export class Wallet {
 
  getWalletClient = async () => {
   // if (typeof etherWindow !== "undefined") {
-  //   debugger
+
   //   const [account] = await etherWindow.ethereum!.request({ method: 'eth_requestAccounts' });
   //   this.account = account;
   // }
