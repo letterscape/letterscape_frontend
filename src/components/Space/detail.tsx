@@ -15,9 +15,9 @@ const SpaceDetail = ({article, hostname, uri}: {article: Article, hostname: stri
         </div>
         <div className="prose prose-lg max-w-none">
           <div dangerouslySetInnerHTML={{ __html: article.content1 }} />
-          <Scape isShow={true} chainId={String(account.chainId)} hostname={hostname} originURI={uri} positionId={'1'} typeId={'1'}/>
+          {/* <Scape isShow={true} chainId={String(account.chainId)} hostname={hostname} originURI={uri} positionId={'1'} typeId={'1'}/> */}
           <div dangerouslySetInnerHTML={{ __html: article.content2 }} />
-          <Scape isShow={true} chainId={String(account.chainId)} hostname={hostname} originURI={uri} positionId={'2'} typeId={'1'}/>
+          {/* <Scape isShow={true} chainId={String(account.chainId)} hostname={hostname} originURI={uri} positionId={'2'} typeId={'1'}/> */}
           <div dangerouslySetInnerHTML={{ __html: article.content3 }} />
         </div>
       </article>

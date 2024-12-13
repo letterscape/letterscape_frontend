@@ -20,7 +20,7 @@ export const scapeType = (typeId: string): string => {
 }
 
 // advertisement component
-const Scape = ({isShow, chainId, hostname, originURI, positionId, typeId}: {isShow: boolean, chainId: string, hostname: string, originURI: string, positionId: string, typeId: string}) => {
+const Scape = ({isShow, chainId, hostname, originURI, positionId, typeId, sendDataToParent}: {isShow: boolean, chainId: string, hostname: string, originURI: string, positionId: string, typeId: string, sendDataToParent: (arg0: any) => void}) => {
 
   const { lsNFT } = lsNFTStore;
   const { genFp } = lsNFT;
@@ -49,7 +49,9 @@ const Scape = ({isShow, chainId, hostname, originURI, positionId, typeId}: {isSh
       }
       wnftResrouceApi.find(params).then(resp => {
         if (resp && resp.code === successCode) {
-          
+          if (!resp.data) {
+            return undefined;
+          } 
           const resource = JSON.parse(resp.data);
           setResourceText(resource.text);
           setResourceURL(resource.url);
@@ -88,6 +90,7 @@ const Scape = ({isShow, chainId, hostname, originURI, positionId, typeId}: {isSh
         if (contentType.startsWith('image/')) {
           const blob = await response.blob();
           setImageSrc(URL.createObjectURL(blob));
+          sendDataToParent(true);
         }
       } catch (error) {
           console.error("Error fetching image:", error);
@@ -117,24 +120,65 @@ const Scape = ({isShow, chainId, hostname, originURI, positionId, typeId}: {isSh
   // }
   
   
+  switch(typeId) {
+    case '1':
+      return (
+        <>
+        {isShow && imageSrc && resourceText &&
+          <div>
+            <div className="chat chat-start">
+              <div className="chat-image avatar">
+                <div className="w-10 rounded-full">
+                  <a href={resourceURL} target="_blank" rel="noopener noreferrer">
+                    <img
+                      alt={`chat ${positionId + 1}`}
+                      src={imageSrc} />
+                  </a>
+                </div>
+              </div>
+              <div className="chat-bubble chat-bubble-info">{resourceText}</div>
+            </div>
+          </div>
+        }
+        </>
+      )
+    case '2':
+      return (
+        <>
+          {isShow && imageSrc &&
+            <div style={{ margin: '20px 0' }}>
+              <a href={resourceURL} target="_blank" rel="noopener noreferrer">
+                <ins
+                  className="byletterscape"
+                  style={{ display: 'block', textAlign: 'center' }}
+                >
+                  <img src={imageSrc} style={{ maxWidth: '100%' }}></img>
+                </ins>
+              </a>
+            </div>
+          }
+        </>
+      );
+    case '3':
+      debugger
+      console.log("isShow: ", isShow);
+      return (
+        <>
+          {imageSrc &&
+          <div className={isShow ? "visible" : "hidden"}>
+            <img
+              key={positionId}
+              src={imageSrc}
+              alt={`Avatar ${positionId}`}
+              className="w-12 h-12 rounded-full border-2 border-white object-cover"
+            />
+          </div>}
+        </>
+      )
+    default:
+      return (<></>)
+  }
   
-  return (
-    <>
-      {isShow && imageSrc &&
-        <div style={{ margin: '20px 0' }}>
-          <a href={resourceURL} target="_blank" rel="noopener noreferrer">
-            <ins
-              className="adsbyletterscape"
-              style={{ display: 'block', textAlign: 'center' }}
-            >
-              <img src={imageSrc} style={{ maxWidth: '100%' }}></img>
-            </ins>
-          </a>
-        </div>
-      }
-    </>
-    
-  );
 }
 
 export default observer(Scape);

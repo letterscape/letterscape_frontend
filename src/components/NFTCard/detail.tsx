@@ -401,14 +401,16 @@ const NFTDetail = () => {
                   </label>
                 </div>
               }
-              <div className="flex gap-3">
-                <p className="flex text-gray-700 mb-6 items-center font-bold">
-                  URL
-                </p>
-                <label className="input input-bordered input-primary flex items-center gap-2 mb-6 w-full">
-                  <input name="url" value={resourceURL} type="text" className="grow" placeholder='set url for the image' onChange={handleResourceURLChange} />
-                </label>
-              </div>
+              {getTypeIdFromTokenId(wnftDetail.tokenId) !== '3' && 
+                <div className="flex gap-3">
+                  <p className="flex text-gray-700 mb-6 items-center font-bold">
+                    URL
+                  </p>
+                  <label className="input input-bordered input-primary flex items-center gap-2 mb-6 w-full">
+                    <input name="url" value={resourceURL} type="text" className="grow" placeholder='set url for the image' onChange={handleResourceURLChange} />
+                  </label>
+                </div>
+              }
               <div className="flex h-full justify-center bg-gray-200">
                 <UploadFile url={`${baseUrl}/resource/upload`} sendDataToParent={handleDataFromUpload} src={imageSrc}/>
               </div>
