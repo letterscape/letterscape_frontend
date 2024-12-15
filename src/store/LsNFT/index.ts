@@ -246,7 +246,7 @@ class LsNFT {
       if (resp && resp.code === successCode) {
         this.wnftInfoList = resp.data.list
       } else {
-        alert(resp.msg);
+        // alert(resp.msg);
       }
     }).catch((error) => {
       console.log(error);

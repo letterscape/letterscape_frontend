@@ -4,6 +4,10 @@ const nextConfig = {
   publicRuntimeConfig: {
     baseUrl: "http://localhost:3000",
   },
+  i18n: {
+    locales: ['en'],
+    defaultLocale: 'en',
+  },
 };
 
 export default nextConfig;

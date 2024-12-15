@@ -148,7 +148,7 @@ const Saleslist = () => {
             })
             setNftList(nftPage);
           } else {
-            alert(resp.msg);
+            // alert(resp.msg);
           }
         }).catch((error) => {
           console.log(error);
@@ -172,7 +172,7 @@ const Saleslist = () => {
   }
 
   return (
-    <div>
+    <div className="">
       <div className="navbar bg-base-100">
         <div className="navbar-start hidden lg:flex">
           <button className="btn btn-square btn-ghost">

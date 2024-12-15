@@ -23,12 +23,12 @@ class Space {
     const txHash = await walletClient.writeContract(request)
     spaceApi.create(content).then(resp => {
       if (resp && resp.code === successCode) {
-        alert("success");
+        // alert("success");
       } else {
-        alert(resp.msg);
+        // alert(resp.msg);
       }
     }).catch((error) => {
-      alert(error)
+      // alert(error)
     })
   }
 
@@ -46,12 +46,12 @@ class Space {
     }
     spaceApi.publish(params).then(resp => {
       if (resp && resp.code === successCode) {
-        alert("success");
+        // alert("success");
       } else {
-        alert(resp.msg);
+        // alert(resp.msg);
       }
     }).catch((error) => {
-      alert(error)
+      // alert(error)
     })
   }
   

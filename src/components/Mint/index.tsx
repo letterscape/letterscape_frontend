@@ -37,9 +37,9 @@ const NoTokenForm = () => {
     const sellPrice = formData.get('sellPrice') as string 
     const interval = formData.get('interval') as string
     const address = account.address || '0x00';
-
+    debugger
     if (!originURI || originURI.length == 0) {
-      alert("originURI cannot be empty")
+      // alert("originURI cannot be empty")
     }
     
     const hostname = new URL(originURI).origin;
@@ -66,7 +66,7 @@ const NoTokenForm = () => {
     }
     // 
     await mint(params);
-    alert("mint success");
+    // alert("mint success");
     router.push("/lists").then(() => {
       router.reload();
     });
@@ -86,6 +86,10 @@ const NoTokenForm = () => {
     }
   }
 
+  function handleTypeSelection(event: ChangeEvent<HTMLSelectElement>): void {
+    
+  }
+
   return (
     <>
       <form onSubmit={submit} >
@@ -95,25 +99,30 @@ const NoTokenForm = () => {
             <input name="title" type="text" className="grow" placeholder="set a title to NFT" required />
           </label>
           <label className="input input-bordered input-primary flex items-center gap-2">
-            originURI
+            OriginURI
             <input name="originURI" type="text" className="grow" placeholder="originURI" onChange={handleURLChange} required />
             {showGo && <button onClick={handleGo} type="button"><kbd>Go</kbd></button>}
           </label>
-          <label className="input input-bordered input-primary flex items-center gap-2">
-            typeId
-            <input name="typeId" type="text" className="grow" placeholder="typeId of NFT" required />
+          <label className="input input-bordered input-primary flex items-center gap-2 block">
+            Type
+            {/* <input name="typeId" type="text" className="grow" placeholder="typeId of NFT" required /> */}
+            <select name="typeId" className="block w-full rounded-md border-none bg-transparent focus:outline-none focus:ring-0" onChange={handleTypeSelection}>
+              <option value="1">Header</option>
+              <option value="2">Body</option>
+              <option value="3">Footer</option>
+            </select>
           </label>
           <label className="input input-bordered input-primary flex items-center gap-2">
-            positionId
+            PositionId
             <input name="positionId" type="text" className="grow" placeholder="id of ad in the layout,length must be less than 100" required />
           </label>
           <label className="input input-bordered input-primary flex items-center gap-2">
-            sellPrice
+            SellPrice
             <input name="sellPrice" type="text" className="grow" placeholder="set a sell price for NFT" required />
             <span>{symbol(account.chainId)}</span>
           </label>
           <label className="input input-bordered input-primary flex items-center gap-2">
-            interval
+            Interval
             <input name="interval" type="text" className="grow" placeholder="the survival time of NFT after first trading" required />
             <span><p>hour(s)</p></span>
           </label>
@@ -150,7 +159,7 @@ const TokenForm = () => {
     const title = formData.get('title') as string; 
     let tokenId = formData.get('tokenId') as string;
     if ((tokenId && !tokenId.includes('0x')) || tokenId.length < 66) {
-      alert('tokenId not right');
+      // alert('tokenId not right');
       return;
     }
     const sellPrice = formData.get('sellPrice') as string ;
@@ -158,7 +167,7 @@ const TokenForm = () => {
     const originURI = await getOriginURI(tokenId as `0x${string}`);
 
     if (!originURI) {
-      alert('originURI not exists');
+      // alert('originURI not exists');
       return;
     }
 
@@ -220,7 +229,7 @@ const TokenForm = () => {
     event.preventDefault();
 
     if (!account || !account.address) {
-      alert("please connect wallet");
+      // alert("please connect wallet");
       return
     }
 

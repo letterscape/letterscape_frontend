@@ -22,9 +22,8 @@ const Header = ({pathId}: {pathId: string}) => {
   const maxVisible = 3;
 
   const handleCount = (isUsed: boolean) => {
-    if (isUsed) {
       setCounter(counter + 1);
-    }
+      console.log("Header counter: ", counter);
   }
 
   return (
@@ -171,7 +170,7 @@ const SpaceDetail = () => {
           setContent(content);
           return content.resource;
         } else {
-          alert(resp.msg);
+          // alert(resp.msg);
           return '';
         }
       }).then((wnft) =>{
@@ -196,7 +195,7 @@ const SpaceDetail = () => {
         if (resp && resp.code === successCode) {
           setContentBody(resp.data);
         } else {
-          alert(resp.msg);
+          // alert(resp.msg);
         }
       })
     } catch (error) {

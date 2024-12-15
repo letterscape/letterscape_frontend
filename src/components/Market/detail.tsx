@@ -14,6 +14,7 @@ import { useAccount } from "wagmi";
 import { marketStore } from "@/store";
 import { divideBigIntWithDecimal, truncateDynamic } from "@/lib/utils";
 import { wnftResrouceApi } from "@/api/wnft/resource";
+import { scapeType } from "../Scape";
 
 let timeLeft = {
   day: 0,
@@ -174,7 +175,7 @@ const MarketDetail = () => {
           setWnftDetail(wnftInfo);
           return wnftInfo
         } else {
-          alert(resp.msg);
+          // alert(resp.msg);
           return wnftDetail
         }
       }).then((wnft) =>{
@@ -203,7 +204,7 @@ const MarketDetail = () => {
         setResourceURL(resource.url);
         return resource.resourceId;
       } else {
-        alert(resp.msg);
+        // alert(resp.msg);
         return undefined;
       }
     }).then((resourceId) =>{
@@ -364,6 +365,12 @@ const MarketDetail = () => {
             <div className="grid grid-cols-2">
               <p className="text-gray-700 mb-6">Chain</p>
               <p className="text-gray-700 mb-6">{chainName(Number(wnftDetail.chainId))}</p>
+            </div>
+            <div className="grid grid-cols-2">
+              <p className="flex text-gray-700 mb-6">
+                Type
+              </p>
+              <p className="text-gray-700 mb-6">{scapeType(getTypeIdFromTokenId(wnftDetail.tokenId))}</p>
             </div>
             <div className="grid grid-cols-2">
               <p className="text-gray-700 mb-6">Content</p>

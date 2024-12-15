@@ -51,7 +51,7 @@ const Market = () => {
             })
             setNftList(nftPage);
           } else {
-            alert(resp.msg);
+            // alert(resp.msg);
           }
         }).catch((error) => {
           console.log(error);

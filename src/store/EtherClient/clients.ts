@@ -1,9 +1,12 @@
 import { defineChain } from 'viem'
 
 export const mainnet_local = /*#__PURE__*/ defineChain({
-  id: 1,
-  name: 'ethereum_mainnet_local',
-  nativeCurrency: { name: 'Ether', symbol: 'ETH', decimals: 18 },
+  // id: 1,
+  // name: 'ethereum_mainnet_local',
+  // nativeCurrency: { name: 'Ether', symbol: 'ETH', decimals: 18 },
+  id: 5000,
+  name: 'mantle_local',
+  nativeCurrency: { name: 'MNT', symbol: 'MNT', decimals: 18 },
   rpcUrls: {
     default: {
       http: ['http://127.0.0.1:8545'],
