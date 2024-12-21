@@ -111,7 +111,7 @@ const TradeTable = ({wnftId}: {wnftId: string}) => {
 
   const [selectedPage, setSelectedPage] = useState(1);
   const [selectedRows, setSelectedRows] = useState(10);
-  const [pageNums, setPageNums] = useState([<option value="1">1</option>]);
+  const [pageNums, setPageNums] = useState([<option key="1" value="1">1</option>]);
   const rows = [10, 20, 50];
 
   useEffect(() => {
@@ -182,7 +182,7 @@ const TradeTable = ({wnftId}: {wnftId: string}) => {
         <tbody>
           {data && data.map(item => {
             return (
-            <tr >
+            <tr key={item.tradeId}>
               <th>{item.tradeId}</th>
               <td>
                 <div className="relative group">
@@ -216,9 +216,9 @@ const TradeTable = ({wnftId}: {wnftId: string}) => {
           <span className="font-medium">rows</span>
           <Select name="rows" value={selectedRows} onChange={handleSelectRowsChange}>
             {
-              rows.map(row => {
+              rows.map((row, index) => {
                 return (
-                  <option value={row}>{row}</option>
+                  <option key={index} value={row}>{row}</option>
                 )
               })
             }
@@ -251,7 +251,7 @@ const TransactionTable = ({wnftId}: {wnftId: string}) => {
 
   const [selectedPage, setSelectedPage] = useState(1);
   const [selectedRows, setSelectedRows] = useState(10);
-  const [pageNums, setPageNums] = useState([<option value="1">1</option>]);
+  const [pageNums, setPageNums] = useState([<option key="1" value="1">1</option>]);
   const rows = [10, 20, 50];
 
   useEffect(() => {
@@ -329,7 +329,7 @@ const TransactionTable = ({wnftId}: {wnftId: string}) => {
         <tbody>
           {data.map(item => {
             return (
-            <tr>
+            <tr key={item.txId}>
               <th>{item.txId}</th>
               <td>
                 <div className="relative group">
@@ -354,9 +354,9 @@ const TransactionTable = ({wnftId}: {wnftId: string}) => {
           <span className="font-medium">rows</span>
           <Select name="rows" value={selectedRows} onChange={handleSelectRowsChange}>
             {
-              rows.map(row => {
+              rows.map((row, index) => {
                 return (
-                  <option value={row}>{row}</option>
+                  <option key={index} value={row}>{row}</option>
                 )
               })
             }
