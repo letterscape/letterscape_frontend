@@ -1,3 +1,40 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+.circle-gradient {
+  border-radius: 630px;
+  background: #FFC0CB;
+  /* background: #00FF7F; */
+  filter: blur(229px);
+  position: absolute;
+  top: 0;
+}
+
+.circle-gradient-pink {
+  border-radius: 630px;
+  background: #7FFFAA;
+  /* background: #FFC0CB; */
+  filter: blur(250px);
+  position: absolute;
+  top: 0;
+  right: 0;
+}
+
+.circle-gradient-dark {
+  position: absolute;
+  top: 0;
+  left: 60px;
+  border-radius: 630px;
+  background: #7353d2;
+  filter: blur(229px);
+}
+
+.circle-gradient-blue-dark {
+  border-radius: 630px;
+  background: #0ea9ff;
+  filter: blur(250px);
+  position: absolute;
+  top: 0;
+  right: 0;
+}

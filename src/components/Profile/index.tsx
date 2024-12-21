@@ -36,6 +36,7 @@ const AdminSetting = () => {
   async function onSetMarket() {
     console.log('adminAddress: ', adminAddress)
     setMarket(adminAddress);
+    // alert("success");
     // debugger
     // await writeContract({
     //   address: '0xA3E5DfE71aE3e6DeC4D98fa28821dF355d7244B3',

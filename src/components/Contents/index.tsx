@@ -40,7 +40,7 @@ const Contents = () => {
             })
             setContentList(contentPage);
           } else {
-            alert(resp.msg);
+            // alert(resp.msg);
           }
         }).catch((error) => {
           console.log(error);
@@ -65,7 +65,7 @@ const Contents = () => {
 
   return (
     <>
-      <div className='"max-w-3xl mx-auto p-6'>
+      <div className='"max-w-3xl mx-auto p-6 h-screen'>
         <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
           <Link href={"/create"}>
             <div className="card border-2 flex items-center justify-center h-64 w-full overflow-hidden ">

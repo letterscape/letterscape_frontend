@@ -59,7 +59,7 @@ const Create = () => {
           router.reload();
         });
       } else {
-        alert(resp.msg);
+        // alert(resp.msg);
       }
     })
   };

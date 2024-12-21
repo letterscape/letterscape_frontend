@@ -82,75 +82,75 @@ const Buttons = ({nftInfo, from}: {nftInfo: WnftInfo, from: From}) => {
     <div className="">
       {from === From.MARKET && nftInfo.isListed &&
         <div className="grid grid-cols-2 w-full gap-0">
-            <div className="card-actions justify-center bg-gray-300">
-              <button 
-                className="btn w-full rounded-none bg-gradient-to-r from-red-600/50 to-red-800/50 backdrop-blur-md text-white font-extrabold hover:from-red-700/60 hover:to-red-900/60 hover:scale-105 transition-transform duration-300" 
-                disabled={!(nftInfo.isExpired && !nftInfo.isBurnt)}
-                onClick={onBurnDialog}>Burn</button>
-              <dialog id="burn_modal" className="modal">
-                <div className="modal-box">
-                  <div className="flex justify-center">
-                    <h1 className="text-2xl font-bold">Still Burn it?</h1>
-                  </div>
-                  <div className="modal-action justify-center">
-                    <div className="grid grid-cols-2 gap-8">
-                      <button 
-                        className="btn w-full rounded-md bg-gradient-to-r from-teal-500/50 to-teal-600/50 backdrop-blur-md text-white font-extrabold hover:from-teal-700/60 hover:to-teal-800/60 hover:scale-105 transition-transform duration-300" 
-                        onClick={closeBurnDialog}>
-                        Calm Down
-                      </button>
-                      <button 
-                        className="btn w-full rounded-md bg-gradient-to-r from-orange-500/50 to-orange-600/50 backdrop-blur-md text-white font-extrabold hover:from-orange-700/60 hover:to-orange-800/60 hover:scale-105 transition-transform duration-300" 
-                        onClick={onBurnClick}>
-                        Burn It
-                      </button>
-                    </div>
+          <div className="card-actions justify-center bg-gray-300">
+            <button 
+              className="btn w-full rounded-none bg-gradient-to-r from-red-600/50 to-red-800/50 backdrop-blur-md text-white font-extrabold hover:from-red-700/60 hover:to-red-900/60 hover:scale-105 transition-transform duration-300" 
+              disabled={!(nftInfo.isExpired && !nftInfo.isBurnt)}
+              onClick={onBurnDialog}>Burn</button>
+            <dialog id="burn_modal" className="modal">
+              <div className="modal-box">
+                <div className="flex justify-center">
+                  <h1 className="text-2xl font-bold">Still Burn it?</h1>
+                </div>
+                <div className="modal-action justify-center">
+                  <div className="grid grid-cols-2 gap-8">
+                    <button 
+                      className="btn w-full rounded-md bg-gradient-to-r from-teal-500/50 to-teal-600/50 backdrop-blur-md text-white font-extrabold hover:from-teal-700/60 hover:to-teal-800/60 hover:scale-105 transition-transform duration-300" 
+                      onClick={closeBurnDialog}>
+                      Calm Down
+                    </button>
+                    <button 
+                      className="btn w-full rounded-md bg-gradient-to-r from-orange-500/50 to-orange-600/50 backdrop-blur-md text-white font-extrabold hover:from-orange-700/60 hover:to-orange-800/60 hover:scale-105 transition-transform duration-300" 
+                      onClick={onBurnClick}>
+                      Burn It
+                    </button>
                   </div>
                 </div>
-              </dialog>
-            </div>
-            <div className="card-actions justify-center bg-gray-300">
-              <button 
-                className="btn w-full rounded-none bg-gradient-to-r from-blue-600/50 to-blue-800/50 backdrop-blur-md text-white font-extrabold hover:from-blue-700/60 hover:to-blue-900/60 hover:scale-105 transition-transform duration-300" 
-                disabled={!(nftInfo.isListed && !nftInfo.isExpired && account.address != nftInfo.owner)} 
-                onClick={onBuyDialog}>Buy</button>
-              <dialog id="buy_modal" className="modal">
-                <div className="modal-box">
-                  <div className="grid grid-cols-4">
-                    <h1 className="text-2xl font-bold">Checkout</h1>
-                    <div className="grid grid-cols-4 justify-center col-start-4">
-                      <button className="flex justify-center bg-white col-start-4" onClick={closeBuyDialog}>
-                        <p className="align-middle">X</p>
-                      </button>
-                    </div>
+              </div>
+            </dialog>
+          </div>
+          <div className="card-actions justify-center bg-gray-300">
+            <button 
+              className="btn w-full rounded-none bg-gradient-to-r from-blue-600/50 to-blue-800/50 backdrop-blur-md text-white font-extrabold hover:from-blue-700/60 hover:to-blue-900/60 hover:scale-105 transition-transform duration-300" 
+              disabled={!(nftInfo.isListed && !nftInfo.isExpired && account.address != nftInfo.owner)} 
+              onClick={onBuyDialog}>Buy</button>
+            <dialog id="buy_modal" className="modal">
+              <div className="modal-box">
+                <div className="grid grid-cols-4">
+                  <h1 className="text-2xl font-bold">Checkout</h1>
+                  <div className="grid grid-cols-4 justify-center col-start-4">
+                    <button className="flex justify-center bg-white col-start-4" onClick={closeBuyDialog}>
+                      <p className="align-middle">X</p>
+                    </button>
                   </div>
-                  <div className="modal-action justify-center ml-6 mr-6">
-                    <form method="dialog" onSubmit={submitBuyForm}>
-                      <div className="flex flex-col justify-center mb-6">
+                </div>
+                <div className="modal-action justify-center ml-6 mr-6">
+                  <form method="dialog" onSubmit={submitBuyForm}>
+                    <div className="flex flex-col justify-center mb-6">
+                      <div className="grid grid-cols-2">
+                        <p className="text-gray-700 mb-2 px-10">Price</p>
+                        <p className="text-gray-700 mb-2">{nftInfo.price}  {symbol(Number(nftInfo.chainId))}</p>
+                      </div>
+                      <div className="grid grid-cols-2">
+                        <p className="text-gray-700 mb-2 px-10">Hold Fee</p>
+                        <p className="text-gray-700 mb-2">{holdfee}  {symbol(Number(nftInfo.chainId))}</p>
+                      </div>
+                      <div className="grid grid-cols-2">
+                        <p className="align-middle px-10">Sell Price</p>
                         <div className="grid grid-cols-2">
-                          <p className="text-gray-700 mb-2 px-10">Price</p>
-                          <p className="text-gray-700 mb-2">{nftInfo.price}  {symbol(Number(nftInfo.chainId))}</p>
-                        </div>
-                        <div className="grid grid-cols-2">
-                          <p className="text-gray-700 mb-2 px-10">Hold Fee</p>
-                          <p className="text-gray-700 mb-2">{holdfee}  {symbol(Number(nftInfo.chainId))}</p>
-                        </div>
-                        <div className="grid grid-cols-2">
-                          <p className="align-middle px-10">Sell Price</p>
-                          <div className="grid grid-cols-2">
-                            <input name="sellPrice" type="text" className="border border-gray-500 rounded-md mr-2 px-2 focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="set price" required />
-                            <span className="align-middle">{symbol(Number(nftInfo.chainId))}</span>
-                          </div>
+                          <input name="sellPrice" type="text" className="border border-gray-500 rounded-md mr-2 px-2 focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="set price" required />
+                          <span className="align-middle">{symbol(Number(nftInfo.chainId))}</span>
                         </div>
                       </div>
-                      <button 
-                        className="btn w-full rounded-md bg-gradient-to-r from-emerald-600/50 to-emerald-800/50 backdrop-blur-md text-white font-extrabold hover:from-emerald-700/60 hover:to-emerald-900/60 hover:scale-105 transition-transform duration-300" 
-                        type="submit">Confirm</button>
-                    </form>
-                  </div>
+                    </div>
+                    <button 
+                      className="btn w-full rounded-md bg-gradient-to-r from-emerald-600/50 to-emerald-800/50 backdrop-blur-md text-white font-extrabold hover:from-emerald-700/60 hover:to-emerald-900/60 hover:scale-105 transition-transform duration-300" 
+                      type="submit">Confirm</button>
+                  </form>
                 </div>
-              </dialog>
-            </div>
+              </div>
+            </dialog>
+          </div>
         </div>
       }
       {from === From.LISTS && account.address == nftInfo.owner &&

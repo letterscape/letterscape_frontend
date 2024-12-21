@@ -1,6 +1,8 @@
 import React, { ReactNode } from 'react';
-import { createWeb3Modal, useWalletInfo } from '@web3modal/wagmi/react';
+import { createWeb3Modal, useWalletInfo, useWeb3ModalTheme } from '@web3modal/wagmi/react';
 import { defaultWagmiConfig } from '@web3modal/wagmi/react/config';
+import { ThemeVariables } from "@web3modal/scaffold";
+import {getWeb3Modal} from "@web3modal/scaffold-react"
 
 import { WagmiProvider, useAccount } from 'wagmi';
 import { arbitrum, mainnet, sepolia } from 'wagmi/chains';
@@ -58,7 +60,14 @@ function WrapQueryClientProvider({ children }: { children: ReactNode }) {
 }
 
 const Web3Provider = function Web3ModalProvider({ children }: { children: ReactNode }) {
-
+  // const {themeMode, themeVariables, setThemeVariables} = useWeb3ModalTheme()
+  // console.log("themeMode: ", themeMode);
+  // console.log("themeVariables: ", themeVariables);
+  // const theme: ThemeVariables = {
+  //   '--w3m-color-mix': '#FFB6C1',
+  //   '--w3m-color-mix-strength': 40
+  // }
+  // setThemeVariables(theme);
   return (
     <WagmiProvider config={config}>
       <WrapQueryClientProvider >{children}</WrapQueryClientProvider>

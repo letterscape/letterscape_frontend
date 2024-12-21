@@ -43,7 +43,7 @@ export default function Index() {
           <Web3Connect />
         </div>
       </div> */}
-      <div className="flex-none">
+      {/* <div className="flex-none">
         <ul className="menu menu-horizontal px-1">
           <li>
             <Link href="/transaction">Transaction</Link>
@@ -52,7 +52,7 @@ export default function Index() {
             <Link href="/storage">Storage</Link>
           </li>
         </ul>
-      </div>
+      </div> */}
     </>
   );
 }

@@ -36,7 +36,7 @@ class Market {
   mint = async ({tokenId, price, interval, title, hostname, originURI, firstCreate}: {tokenId: `0x${string}`, price: bigint, interval: number, title: string, hostname: string | undefined, originURI: string, firstCreate: boolean}) => {
     
     if (!wallet || !wallet.account) {
-      alert("please connect wallet first")
+      // alert("please connect wallet first")
       return
     }
 
@@ -72,7 +72,7 @@ class Market {
     wnftApi.mint(params).then(data => {
       console.log("mint response: ", data)
     }).catch((error) => {
-      alert(error)
+      // alert(error)
     })
   }
 
@@ -111,7 +111,7 @@ class Market {
     wnftApi.list(params).then(data => {
       console.log("mint response: ", data)
     }).catch((error) => {
-      alert(error)
+      // alert(error)
     })
   }
 
@@ -136,7 +136,7 @@ class Market {
     wnftApi.buy(params).then(data => {
       console.log("buy response: ", data)
     }).catch((error) => {
-      alert(error)
+      // alert(error)
     })
   }
 
@@ -157,7 +157,7 @@ class Market {
     wnftApi.burn(params).then(data => {
       console.log("burn response: ", data)
     }).catch((error) => {
-      alert(error)
+      // alert(error)
     })
   }
 
@@ -188,9 +188,9 @@ class Market {
     }
     wnftApi.payHoldfee(params).then(data => {
       console.log("payHoldfee response: ", data)
-      alert("pay success")
+      // alert("pay success")
     }).catch((error) => {
-      alert(error)
+      // alert(error)
     })
   }
 

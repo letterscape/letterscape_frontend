@@ -10,11 +10,11 @@ import { successCode } from '@/lib/constants';
 export const scapeType = (typeId: string): string => {
   switch(typeId) {
     case '1':
-      return 'header';
+      return 'Header';
     case '2':
-      return 'body';
+      return 'Body';
     case '3':
-      return 'footer';
+      return 'Footer';
   }
   return '';
 }
@@ -57,7 +57,7 @@ const Scape = ({isShow, chainId, hostname, originURI, positionId, typeId, sendDa
           setResourceURL(resource.url);
           return resource.resourceId;
         } else {
-          alert(resp.msg);
+          // alert(resp.msg);
           return undefined;
         }
       }).then((resourceId) =>{
@@ -160,8 +160,6 @@ const Scape = ({isShow, chainId, hostname, originURI, positionId, typeId, sendDa
         </>
       );
     case '3':
-      debugger
-      console.log("isShow: ", isShow);
       return (
         <>
           {imageSrc &&

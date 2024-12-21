@@ -12,6 +12,7 @@ import { chainName, symbol, symbolDecimal, symbolDimension } from '@/lib/chainTe
 import { divideBigIntWithDecimal, formatTimestampToDateTime, truncateDynamic } from '@/lib/utils';
 import { ArrowTopRightOnSquareIcon, PencilSquareIcon } from '@heroicons/react/24/outline';
 import { wnftResrouceApi } from '@/api/wnft/resource';
+import { scapeType } from '../Scape';
 
 const UploadFile = ({url, sendDataToParent, src} : {url: string, sendDataToParent: (arg0: string) => void, src: any}) => {
   
@@ -53,7 +54,7 @@ const UploadFile = ({url, sendDataToParent, src} : {url: string, sendDataToParen
       });
       if (resp.data.code === successCode) {
         console.log('上传成功: ', resp.data.data);
-        alert("upload success")
+        // alert("upload success")
         sendDataToParent(resp.data.data);
         router.replace(router.asPath);
       } else {
@@ -163,7 +164,7 @@ const NFTDetail = () => {
           setWnftDetail(wnftInfo);
           return wnftInfo;
         } else {
-          alert(resp.msg);
+          // alert(resp.msg);
           return wnftDetail
         }
       }).then((wnft) =>{
@@ -191,7 +192,7 @@ const NFTDetail = () => {
         setResourceURL(resource.url);
         return resource.resourceId;
       } else {
-        alert(resp.msg);
+        // alert(resp.msg);
         return undefined;
       }
     }).then((resourceId) =>{
@@ -277,9 +278,9 @@ const NFTDetail = () => {
     }
     wnftApi.updateDetail(params).then(resp => {
       if (resp && resp.code === successCode) {
-        alert('update success')
+        // alert('update success')
       } else {
-        alert(resp.msg);
+        // alert(resp.msg);
       }
       router.push(router.asPath)
     }).catch((error) => {
@@ -309,9 +310,9 @@ const NFTDetail = () => {
         
         const cid = resp.data;
         setTokenURI(wnftDetail.tokenId, cid) // tokenURI = cid
-        alert("save success");
+        // alert("save success");
       } else {
-        alert(resp.msg);
+        // alert(resp.msg);
       }
     }).catch((error) => {
       console.log(error);
@@ -482,6 +483,12 @@ const NFTDetail = () => {
               <div className="grid grid-cols-2">
                 <p className="text-gray-700 mb-6">Chain</p>
                 <p className="text-gray-700 mb-6">{chainName(Number(wnftDetail.chainId))}</p>
+              </div>
+              <div className="grid grid-cols-2">
+                <p className="flex text-gray-700 mb-6">
+                  Type
+                </p>
+                <p className="text-gray-700 mb-6">{scapeType(getTypeIdFromTokenId(wnftDetail.tokenId))}</p>
               </div>
               {isEdit ?
                 <div className="grid grid-cols-2">
