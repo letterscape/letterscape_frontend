@@ -1,15 +1,12 @@
-import Footer from './footer';
-import Navbar from './navbar';
-import Web3Provider from '../Wallet';
+import { ThemeProvider } from 'next-themes';
+import { LetterscapeAppWithProviders } from './provider';
 
 const Layout = ({ children } : any) => {
   return (
     <div>
-      <Web3Provider>
-        <Navbar />
-        <main data-theme="light" className="pt-16">{children}</main>
-        <Footer />
-      </Web3Provider>
+      <ThemeProvider enableSystem>
+        <LetterscapeAppWithProviders>{children}</LetterscapeAppWithProviders>
+      </ThemeProvider>
     </div>
   );
 };

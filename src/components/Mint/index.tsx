@@ -94,16 +94,16 @@ const NoTokenForm = () => {
     <>
       <form onSubmit={submit} >
         <div className='space-y-12'>
-          <label className="input input-bordered input-primary flex items-center gap-2">
+          <label className="input border-[var(--bg-border)] input-primary flex items-center gap-2 bg-transparent">
             Title
             <input name="title" type="text" className="grow" placeholder="set a title to NFT" required />
           </label>
-          <label className="input input-bordered input-primary flex items-center gap-2">
+          <label className="input border-[var(--bg-border)] input-primary flex items-center gap-2 bg-transparent">
             OriginURI
             <input name="originURI" type="text" className="grow" placeholder="originURI" onChange={handleURLChange} required />
             {showGo && <button onClick={handleGo} type="button"><kbd>Go</kbd></button>}
           </label>
-          <label className="input input-bordered input-primary flex items-center gap-2 block">
+          <label className="input border-[var(--bg-border)] input-primary flex items-center gap-2 block bg-transparent">
             Type
             {/* <input name="typeId" type="text" className="grow" placeholder="typeId of NFT" required /> */}
             <select name="typeId" className="block w-full rounded-md border-none bg-transparent focus:outline-none focus:ring-0" onChange={handleTypeSelection}>
@@ -112,23 +112,23 @@ const NoTokenForm = () => {
               <option value="3">Footer</option>
             </select>
           </label>
-          <label className="input input-bordered input-primary flex items-center gap-2">
+          <label className="input border-[var(--bg-border)] input-primary flex items-center gap-2 bg-transparent">
             PositionId
-            <input name="positionId" type="text" className="grow" placeholder="id of ad in the layout,length must be less than 100" required />
+            <input name="positionId" type="text" className="grow" placeholder="set posistion id" required />
           </label>
-          <label className="input input-bordered input-primary flex items-center gap-2">
+          <label className="input border-[var(--bg-border)] input-primary flex items-center gap-2 bg-transparent">
             SellPrice
             <input name="sellPrice" type="text" className="grow" placeholder="set a sell price for NFT" required />
             <span>{symbol(account.chainId)}</span>
           </label>
-          <label className="input input-bordered input-primary flex items-center gap-2">
+          <label className="input border-[var(--bg-border)] input-primary flex items-center gap-2 bg-transparent">
             Interval
             <input name="interval" type="text" className="grow" placeholder="the survival time of NFT after first trading" required />
             <span><p>hour(s)</p></span>
           </label>
         </div>
         <div className='flex justify-center p-8'>
-          <button className="btn btn-success" type="submit">Mint</button>
+          <button className="btn bg-btn-mint px-8 py-3 cursor-pointer" type="submit">Mint</button>
         </div>
       </form>
     </>
@@ -256,25 +256,25 @@ const TokenForm = () => {
     <>
       <form className="token_form" onSubmit={submit} >
         <div className='space-y-12'>
-          <label className="input input-bordered input-primary flex items-center gap-2">
+          <label className="input border-[var(--bg-border)] input-primary flex items-center gap-2 bg-transparent">
             Title
             <input name="title" type="text" className="grow" placeholder="set a title to NFT" required />
           </label>
-          <label className="input input-bordered input-primary flex items-center gap-2">
+          <label className="input border-[var(--bg-border)] input-primary flex items-center gap-2 bg-transparent">
             TokenId
             <input name="tokenId" type="text" className="grow" placeholder="66 length string started with 0x" required onChange={handleTokenIdChange}/>
           </label>
-          <label className="input input-bordered input-primary flex items-center gap-2">
+          <label className="input border-[var(--bg-border)] input-primary flex items-center gap-2 bg-transparent">
             originURI
             <input name="originURI" type="text" className="grow" disabled placeholder={uri} onChange={handleURLChange}/>
             {showGo && <button onClick={handleGo} type="button"><kbd>Go</kbd></button>}
           </label>
-          <label className="input input-bordered input-primary flex items-center gap-2">
+          <label className="input border-[var(--bg-border)] input-primary flex items-center gap-2 bg-transparent">
             sellPrice
             <input name="sellPrice" type="text" className="grow" placeholder="set a sell price for NFT" required onChange={handleSellPriceChange}/>
             <span>{symbol(account.chainId)}</span>
           </label>
-          <label className="input input-bordered input-primary flex items-center gap-2">
+          <label className="input border-[var(--bg-border)] input-primary flex items-center gap-2 bg-transparent">
             interval
             <input name="interval" type="text" className="grow" placeholder="the survival time of NFT after first trading" required />
             <span><p>hour(s)</p></span>
@@ -282,7 +282,7 @@ const TokenForm = () => {
         </div>
         <div className='flex justify-center p-8'>
           <button 
-            className="btn btn-success"
+            className="btn bg-btn-mint px-8 py-3 cursor-pointer"
             type='button'
             onClick={onMintDialog}>Mint
           </button>
@@ -320,18 +320,18 @@ const TokenForm = () => {
 const Mint = () => {
 
   return (
-    <div className='gap-px max-w-xl mx-auto p-8'>
-      <div className="p-16">
+    <div className='gap-px max-w-xl mx-auto p-8 '>
+      {/* <div className="p-16">
         <span><p className='text-center text-xl font-mono'>Mint NFT</p></span>
-      </div>
-      <div role="tablist" className="tabs tabs-boxed">
-        <input type="radio" name="creation_tab" role="tab" className="tab" aria-label="First Mint" defaultChecked/>
-        <div role="tabpanel" className="tab-content bg-base-100 border-base-300 rounded-box p-6">
+      </div> */}
+      <div role="tablist" className="tabs tabs-lifted bg-transparent">
+        <input type="radio" name="creation_tab" role="tab" className="tab [--tab-bg:rgba(255,255,255,0.5)] aria-selected:[--tab-bg:rgba(255,255,255,0.9)]" aria-label="Mint with URL" defaultChecked/>
+        <div role="tab" className="tab-content rounded-box p-6 bg-transparent  border-[var(--bg-border)]">
           <NoTokenForm />
         </div>
 
-        <input type="radio" name="creation_tab" role="tab" className="tab" aria-label="Mint with tokenId" />
-        <div role="tabpanel" className="tab-content bg-base-100 border-base-300 rounded-box p-6">
+        <input type="radio" name="creation_tab" role="tab" className="tab [--tab-bg:rgba(255,255,255,0.5)] aria-selected:[--tab-bg:rgba(255,255,255,0.9)]" aria-label="Mint with tokenId" />
+        <div role="tabpanel" className="tab-content rounded-box p-6 bg-transparent border-[var(--bg-border)]">
           <TokenForm />
         </div>
       </div>

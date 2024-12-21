@@ -4,17 +4,20 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCircleUser } from '@fortawesome/free-regular-svg-icons';
 import { AdjustmentsHorizontalIcon, UserIcon, ClipboardDocumentListIcon, ArrowTurnDownRightIcon, PlusIcon } from '@heroicons/react/24/outline'
 import Image from 'next/image';
+import { SwitchThemes } from '../Theme/SwitchThemes';
 
 const Navbar = () => {
   return (
     <>
-      <div data-theme="cupcake" className="navbar fixed top-0 left-0 right-0 bg-base-100 z-50">
+      <div className=" lg:static top-0 navbar min-h-0 flex-shrink-0 justify-between z-20 px-0 sm:px-2">
+      {/* <div className="navbar fixed top-0 left-0 right-0 bg-base-100 z-50"> */}
         <div className="flex-none">
-          <Image src="/logo_round.png" alt="Letterscape" width={50} height={50} priority/>
+          <Image src="/logo_round_transparent.png" alt="Letterscape" width={50} height={50} priority/>
         </div>
         <div className="navbar-start pr-32">
-          <span className="btn btn-ghost text-xl font-bold"><Link href="/market"><h1>Letterscape</h1></Link></span>
-          <div className="divider divider-horizontal"></div>
+          <span className="btn btn-ghost text-xl font-bold"><Link href="/"><h1>Letterscape</h1></Link></span>
+          {/* <div className="divider divider-horizontal"></div> */}
+          <div className="h-5 text-sm border-l border-neutral"></div>
           <div className="flex-none">
             <ul className="menu menu-horizontal">
               <li className="text-xs"><Link href="/market"><b>Market</b></Link></li>
@@ -24,7 +27,7 @@ const Navbar = () => {
           </div>
         </div>
         <div className="navbar-center">
-          <label className="input input-bordered flex items-center gap-2">
+          <label className="input border-[var(--bg-border)] flex items-center gap-2 bg-transparent">
           <svg
             xmlns="http://www.w3.org/2000/svg"
             viewBox="0 0 16 16"
@@ -44,7 +47,8 @@ const Navbar = () => {
             <li className="text-xs"><Link href="/create"><PlusIcon className="size-6"/><b>Create</b></Link></li>
           </ul> */}
           
-          <w3m-button />
+          <w3m-button size='md' label='Connect'/>
+          <div className="h-5 text-sm border-l border-neutral" style={{margin: '20px'}}></div>
           <div className="dropdown dropdown-end">
             <div tabIndex={0} role="button" className="btn btn-ghost btn-circle avatar">
               <div className="w-10 rounded-full content-center">
@@ -79,6 +83,11 @@ const Navbar = () => {
                   <b>Settings</b>
                 </a>
               </li>
+              <li>
+                <a className="justify-stretch gap-8 leading-loose">
+                  <SwitchThemes/>
+                </a>
+              </li>
               <div className="divider divider-vertical"></div>
               <li>
                 <a className="justify-stretch gap-8 leading-loose">
@@ -90,16 +99,6 @@ const Navbar = () => {
           </div>
         </div>
       </div>
-      {/* <div className="flex-none">
-        <ul className="menu menu-horizontal px-1">
-          <li>
-            <Link href="/transaction">Transaction</Link>
-          </li>
-          <li>
-            <Link href="/storage">Storage</Link>
-          </li>
-        </ul>
-      </div> */}
     </>
   );
 }
