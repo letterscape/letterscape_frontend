@@ -397,7 +397,7 @@ const NFTDetail = () => {
                   <p className="flex text-gray-700 mb-6 items-center font-bold">
                     Text
                   </p>
-                  <label className="input input-bordered input-primary flex items-center gap-2 mb-6 w-full">
+                  <label className="input input-primary flex items-center gap-2 mb-6 w-full bg-transparent border-[var(--bg-border)]">
                     <input name="text" value={resourceText} type="text" className="grow" placeholder='write something' onChange={handleResourceTextChange} />
                   </label>
                 </div>
@@ -407,12 +407,12 @@ const NFTDetail = () => {
                   <p className="flex text-gray-700 mb-6 items-center font-bold">
                     URL
                   </p>
-                  <label className="input input-bordered input-primary flex items-center gap-2 mb-6 w-full">
+                  <label className="input input-primary flex items-center gap-2 mb-6 w-full bg-transparent border-[var(--bg-border)]">
                     <input name="url" value={resourceURL} type="text" className="grow" placeholder='set url for the image' onChange={handleResourceURLChange} />
                   </label>
                 </div>
               }
-              <div className="flex h-full justify-center bg-gray-200">
+              <div className="flex h-full justify-center backdrop-blur-md bg-white/30">
                 <UploadFile url={`${baseUrl}/resource/upload`} sendDataToParent={handleDataFromUpload} src={imageSrc}/>
               </div>
               <div className="mt-6">

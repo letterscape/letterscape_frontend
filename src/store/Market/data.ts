@@ -4,8 +4,7 @@ import { base } from "../Base"
 export const domain = {
   name: 'LSMarket',
   version: '1',
-  // chainId: 1,
-  chainId: 5000,
+  chainId: 1,
   verifyingContract: base.marketAddress,
 } as const
  

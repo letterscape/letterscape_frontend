@@ -50,7 +50,7 @@ const AdminSetting = () => {
   return (
     <div className="join">
       <div>
-        <input className="input input-bordered join-item" placeholder="set market contract address" onChange={onChangeAdminText}/>
+        <input className="input input-bordered join-item bg-transparent" placeholder="set market contract address" onChange={onChangeAdminText}/>
       </div>
       <div className="indicator">
         <button className="btn join-item" onClick={onSetMarket}>Set</button>
@@ -98,12 +98,12 @@ const Profile = () => {
   return (
     <div role="tablist" className="tabs tabs-bordered">
       <input type="radio" name="my_tabs_1" role="tab" className="tab" aria-label="Profile" defaultChecked />
-      <div role="tabpanel" className="tab-content bg-base-100 border-base-300 rounded-box p-6">
+      <div role="tabpanel" className="tab-content bg-base-100 border-base-300 rounded-box p-6 bg-transparent">
         Nothing
       </div>
 
       <input type="radio" name="my_tabs_1" role="tab" className="tab" aria-label="Market" />
-      <div role="tabpanel" className="tab-content bg-base-100 border-base-300 rounded-box p-6">
+      <div role="tabpanel" className="tab-content bg-base-100 border-base-300 rounded-box p-6 bg-transparent">
         { account.address === base.adminAddress && <AdminSetting />}
         <div style={{margin: '20px 0'}}>
           <GetOwner />
@@ -111,7 +111,7 @@ const Profile = () => {
       </div>
 
       <input type="radio" name="my_tabs_1" role="tab" className="tab" aria-label="Other" />
-      <div role="tabpanel" className="tab-content bg-base-100 border-base-300 rounded-box p-6">Nothing</div>
+      <div role="tabpanel" className="tab-content border-base-300 rounded-box p-6 bg-transparent">Nothing</div>
     </div>
   );
 }

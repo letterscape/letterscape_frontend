@@ -318,7 +318,7 @@ const MarketDetail = () => {
                   <p className="flex text-gray-700 mb-6 items-center font-bold">
                     Text
                   </p>
-                  <label className="input input-bordered input-primary flex items-center gap-2 mb-6 w-full">
+                  <label className="input input-bordered input-primary flex items-center gap-2 mb-6 w-full bg-transparent">
                     <input name="text" value={resourceText} type="text" className="grow" disabled/>
                   </label>
                 </div>
@@ -327,13 +327,13 @@ const MarketDetail = () => {
                 <p className="flex text-gray-700 mb-6 items-center font-bold">
                   URL
                 </p>
-                <label className="input input-bordered input-primary flex items-center gap-2 mb-6 w-full">
+                <label className="input input-bordered input-primary flex items-center gap-2 mb-6 w-full bg-transparent">
                   <input name="url" value={resourceURL} type="text" className="grow" disabled/>
                 </label>
               </div>
-              <div className="flex h-full justify-center bg-gray-200">
+              <div className="flex h-full justify-center  backdrop-blur-md bg-white/30">
                 <div className="flex gap-3" style={{ margin: '20px 20px' }}>
-                  <img src={imageSrc} style={{ maxWidth: '100%' }}></img>
+                  <img src={imageSrc} className="object-contain"></img>
                 </div>
               </div>
             </form>

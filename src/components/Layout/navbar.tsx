@@ -88,13 +88,13 @@ const Navbar = () => {
                   <SwitchThemes/>
                 </a>
               </li>
-              <div className="divider divider-vertical"></div>
+              {/* <div className="divider divider-vertical"></div>
               <li>
                 <a className="justify-stretch gap-8 leading-loose">
                   <ArrowTurnDownRightIcon className="size-5"/>
                   <b>Logout</b>
                 </a>
-              </li>
+              </li> */}
             </ul>
           </div>
         </div>

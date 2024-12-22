@@ -54,6 +54,7 @@ const Create = () => {
           content: content,
           originURI: `${baseUrl}/contents/${contentId}`
         }
+        debugger
         await create(params);
         router.push("/contents").then(() => {
           router.reload();
@@ -67,7 +68,7 @@ const Create = () => {
   return (
     <div className="p-4">
       <div className="flex justify-center items-center">
-        <textarea className="text-center text-5xl border font-bold border-gray-300 rounded border-none outline-none resize-none w-full h-32 p-4" placeholder="Title" onChange={handleTitleChange}>{title}</textarea>
+        <textarea className="text-center text-5xl border font-bold border-gray-300 rounded border-none outline-none resize-none w-full h-32 p-4 bg-transparent" placeholder="Title" onChange={handleTitleChange}>{title}</textarea>
       </div>
       <Editor
         apiKey={process.env.NEXT_PUBLIC_TINYMCE_API_KEY}

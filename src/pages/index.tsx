@@ -10,7 +10,7 @@ export default function Index() {
       <div>
         <Head>
           <title>Letterscape</title>
-          <link rel="icon" href="/logo_round.png" type="image/x-icon" />
+          <link rel="icon" href="/logo_round_transparent.png" type="image/x-icon" />
         </Head>
         <Home />
       </div>
