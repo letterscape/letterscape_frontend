@@ -2,23 +2,41 @@
 @tailwind components;
 @tailwind utilities;
 
-.circle-gradient {
+.gradient-to-bottom-blue {
   border-radius: 630px;
-  background: #FFC0CB;
+  background: #00FFFF;
   /* background: #00FF7F; */
-  filter: blur(229px);
+  filter: blur(299px);
   position: absolute;
   top: 0;
 }
 
 .circle-gradient-pink {
   border-radius: 630px;
-  background: #7FFFAA;
+  background: #FFB6C1;
+  /* background: #00FF7F; */
+  filter: blur(229px);
+  position: absolute;
+  bottom: 150px;
+}
+
+.circle-gradient-green {
+  border-radius: 630px;
+  background: #00FA9A;
   /* background: #FFC0CB; */
   filter: blur(250px);
   position: absolute;
-  top: 0;
+  bottom: 150px;
   right: 0;
+}
+
+.gradient-to-top-yellow {
+  border-radius: 630px;
+  background: #FFF8DC;
+  /* background: #00FF7F; */
+  filter: blur(299px);
+  position: absolute;
+  bottom: 0;
 }
 
 .circle-gradient-dark {

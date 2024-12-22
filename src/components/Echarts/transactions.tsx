@@ -380,17 +380,17 @@ const TransactionEcharts = ({wnftId}: {wnftId: string}) => {
   return (
     <div role="tablist" className="tabs tabs-bordered">
       <input type="radio" name="tx_tab" role="tab" className="tab" aria-label="Price" defaultChecked />
-      <div role="tabpanel" className="tab-content bg-base-100 border-base-300 rounded-box p-6">
+      <div role="tabpanel" className="tab-content bg-base-100 border-base-300 rounded-box p-6 bg-transparent">
         <PriceChart wnftId={wnftId} />
       </div>
 
       <input type="radio" name="tx_tab" role="tab" className="tab" aria-label="Trade" />
-      <div role="tabpanel" className="tab-content bg-base-100 border-base-300 rounded-box p-6">
+      <div role="tabpanel" className="tab-content bg-base-100 border-base-300 rounded-box p-6 bg-transparent">
         <TradeTable wnftId={wnftId} />
       </div>
 
       <input type="radio" name="tx_tab" role="tab" className="tab" aria-label="Transaction" />
-      <div role="tabpanel" className="tab-content bg-base-100 border-base-300 rounded-box p-6">
+      <div role="tabpanel" className="tab-content bg-base-100 border-base-300 rounded-box p-6 bg-transparent">
         <TransactionTable wnftId={wnftId} />
       </div>
     </div>

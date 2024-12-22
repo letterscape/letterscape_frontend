@@ -166,34 +166,20 @@ const Saleslist = () => {
   }
 
   return (
-    // <div className="">
-    //   <div className="navbar bg-transparent">
-    //     <div className="navbar-start hidden lg:flex">
-    //       <button className="btn btn-square btn-ghost">
-    //         <ClipboardDocumentListIcon className="size-5" />
-    //       </button>
-    //       <select className="select select-bordered w-full max-w-xs " defaultValue="All" onChange={handleStatusSelection}>
-    //         <option value="All">All</option>
-    //         <option value="Listed">Listed</option>
-    //         <option value="Not Listed">Not Listed</option>
-    //       </select>
-    //     </div>
-    //   </div>
-    //   <div className='"max-w-3xl mx-auto p-6'>
-    //     <Lists nftList={nftList} status={selectedStatus} />
-    //   </div>
-    // </div>
-    <div role="tablist" className="tabs tabs-lifted bg-transparent" style={{ margin: '20px' }}>
-      <input type="radio" name="list_tab" role="tab" className="tab whitespace-nowrap [--tab-bg:rgba(255,255,255,0.5)] aria-selected:[--tab-bg:rgba(255,255,255,0.9)]" aria-label="Not Listed" defaultChecked/>
-      <div role="tab" className="tab-content rounded-box p-6 bg-transparent ">
-        <Lists nftList={nftList} status={ListStatus.NOT_LISTED} />
-      </div>
+    <div className="h-screen">
+      <div role="tablist" className="tabs tabs-lifted bg-transparent" style={{ margin: '20px' }}>
+        <input type="radio" name="list_tab" role="tab" className="tab whitespace-nowrap [--tab-bg:rgba(255,255,255,0.5)] aria-selected:[--tab-bg:rgba(255,255,255,0.9)]" aria-label="Not Listed" defaultChecked/>
+        <div role="tab" className="tab-content rounded-box p-6 bg-transparent ">
+          <Lists nftList={nftList} status={ListStatus.NOT_LISTED} />
+        </div>
 
-      <input type="radio" name="list_tab" role="tab" className="tab [--tab-bg:rgba(255,255,255,0.5)] aria-selected:[--tab-bg:rgba(255,255,255,0.9)]" aria-label="Listed" />
-      <div role="tabpanel" className="tab-content rounded-box p-6 bg-transparent">
-        <Lists nftList={nftList} status={ListStatus.LISTED} />
+        <input type="radio" name="list_tab" role="tab" className="tab [--tab-bg:rgba(255,255,255,0.5)] aria-selected:[--tab-bg:rgba(255,255,255,0.9)]" aria-label="Listed" />
+        <div role="tabpanel" className="tab-content rounded-box p-6 bg-transparent">
+          <Lists nftList={nftList} status={ListStatus.LISTED} />
+        </div>
       </div>
     </div>
+    
   );
 }
 

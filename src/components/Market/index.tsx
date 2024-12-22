@@ -80,7 +80,7 @@ const Market = () => {
       <button className="btn btn-active btn-primary" onClick={onAccountInfo}>获取账户信息</button>
       <span>账户信息：<i>{account}</i></span>
      </div> */}
-     <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
+     <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4 h-screen">
      {nftList.map(nft => (
         <div key={nft.id}>
           {nft.style}

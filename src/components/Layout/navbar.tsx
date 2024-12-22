@@ -9,7 +9,7 @@ import { SwitchThemes } from '../Theme/SwitchThemes';
 const Navbar = () => {
   return (
     <>
-      <div className=" lg:static top-0 navbar min-h-0 flex-shrink-0 justify-between z-20 px-0 sm:px-2">
+      <div className=" lg:static top-0 navbar min-h-0 flex-shrink-0 justify-between z-50 px-0 sm:px-2">
       {/* <div className="navbar fixed top-0 left-0 right-0 bg-base-100 z-50"> */}
         <div className="flex-none">
           <Image src="/logo_round_transparent.png" alt="Letterscape" width={50} height={50} priority/>
