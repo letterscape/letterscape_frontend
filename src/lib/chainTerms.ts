@@ -16,6 +16,7 @@ export const chainName = (chainId: number | undefined): string => {
     case 42161: // Arbitrum One
       return "Arbitrum One"
     case 56: // BNB Smart Chain Mainnet
+    case 97:
       return "BNB"
     default: 
       return ""
@@ -33,7 +34,8 @@ export const symbol = (chainId: number | undefined): string => {
     case 42161: // Arbitrum One
       return "ETH"
     case 56: // BNB Smart Chain Mainnet
-      return "BNB"
+    case 97:
+      return "tBNB"
     case 5000: // Mantle
       return "MNT"
     default: 
@@ -53,6 +55,7 @@ export const symbolDimension = (chainId: number | undefined): bigint => {
     case 42161: // Arbitrum One
       return ETH_TO_WEI
     case 56: // BNB Smart Chain Mainnet
+    case 97:
       return BNB_TO_WEI
     default: 
       return BigInt(1)
@@ -71,6 +74,7 @@ export const symbolDecimal = (chainId: number | undefined): number => {
     case 42161: // Arbitrum One
       return ETH_DECIMAL
     case 56: // BNB Smart Chain Mainnet
+    case 97:
       return BNB_DECIMAL
     default: 
       return 1
