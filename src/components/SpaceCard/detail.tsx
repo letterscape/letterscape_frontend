@@ -75,10 +75,11 @@ const Body = ({htmlContent, interval}: {htmlContent: string, interval: number}) 
   let pInterval = 0;
 
   React.Children.forEach(contentNodes, (node, index) => {
+    debugger
     if (React.isValidElement(node) && node.type === "p") {
       contentWithResrouce.push(node);
       pCounter++;
-
+      debugger
       // insert resource
       if (pCounter % interval === 0) {
         pInterval++;
@@ -149,7 +150,7 @@ const Footer = ({pathId}: {pathId: string}) => {
 const SpaceDetail = () => {
   const router = useRouter();
   const { id } = router.query;
-
+  const account = useAccount();
   
   const [loading, setLoading] = useState(true);
   const [pathId, setPathId] = useState('');
@@ -210,30 +211,36 @@ const SpaceDetail = () => {
       setPathId(id as string);
       info();
     }
-  }, [id])
+  }, [id]);
+
+  const handleMint = async (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+    event.preventDefault();
+    debugger
+    router.push({
+      pathname: '/mint',
+      query:{
+        from: `${baseUrl}${router.asPath}`,
+      }
+    })
+  }
 
 
   if (!pathId || loading) {
     return <div>Loading...</div>;
   }
 
-  const avatarUrls = [
-    "https://via.placeholder.com/150",
-    "https://via.placeholder.com/150/0000FF",
-    "https://via.placeholder.com/150/FF0000",
-    "https://via.placeholder.com/150/00FF00",
-    "https://via.placeholder.com/150/FFFF00",
-    "https://via.placeholder.com/150/FFFF00",
-    "https://via.placeholder.com/150/FFFF00",
-    "https://via.placeholder.com/150/FFFF00",
-    "https://via.placeholder.com/150/FFFF00",
-  ];
-
   return (
-    <div className="max-w-3xl mx-auto p-6">
-      <div className="text-5xl border font-bold border-gray-300 rounded border-none outline-none resize-none w-full h-32">{content?.title}</div>
-      <div className="text-sm text-gray-600 mb-6">
-        <span>By {content?.author}</span>
+    <div className="max-w-3xl mx-auto p-4">
+      <div className="text-5xl border font-bold border-gray-300 rounded border-none outline-none resize-none w-full pb-4">{content?.title}</div>
+      <div className="grid grid-cols-2 p-4">
+        <div className="flex text-sm text-gray-600 items-center whitespace-nowrap">
+          <span>By {content?.author}</span>
+        </div>
+        { content?.author == account.address &&
+          <div className="flex justify-end">
+            <button className="btn bg-btn-mint cursor-pointer" onClick={handleMint}>Mint</button>
+          </div>
+        }
       </div>
       <div>
         <Header pathId={pathId}/>

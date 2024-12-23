@@ -10,9 +10,9 @@ class Base {
 
 
   adminAddress = "0xa0Ee7A142d267C1f36714E4a8F75612F20a79720" as `0x${string}`;
-  nftAddress = "0xBCd465D95A11DD9ce72e39828efca5c5A3b7f137" as `0x${string}`;
-  marketAddress = "0x8979a3a3469E9BA8f0adc3E8421AA2130551A765" as `0x${string}`;
-  spaceAddress = "0x57C1f01552BE368A859f05f0525f4E453731a20E" as `0x${string}`;
+  nftAddress = "0x359f320DFA5237dBA263e8C978Cb743f4C7bFb09" as `0x${string}`;
+  marketAddress = "0xeC6c32bd206f661F6BF22d7dE2ECe4Db8020039B" as `0x${string}`;
+  spaceAddress = "0x565b23e0D9E2C5Fa3A8f979f190BB96E2Cde945a" as `0x${string}`;
 
   ecdsaName = "LSMarket";
   ecdsaVersion = "1";
