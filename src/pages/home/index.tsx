@@ -58,7 +58,7 @@ export default function Index() {
         <div>
           <p className="font-mono text-4xl text-center">{displayText  || '\u00A0'}</p>
           <div className="flex items-center justify-center">
-            <p className="font-serif font-normal italic text-2xl mt-5">The creator's paradise</p>
+            <p className="font-serif font-normal italic text-2xl mt-5">The creator&apos;s paradise</p>
           </div>
         </div>
       </div>
