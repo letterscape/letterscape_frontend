@@ -7,10 +7,12 @@ import { useAccount } from "wagmi";
 import SpaceCard from "../SpaceCard";
 import Link from "next/link";
 import { From } from "../SpaceCard";
+import { rpcConfig } from "@/store/EtherClient/clients";
+import { getAccount } from "@wagmi/core";
 
 const Space = () => {
 
-  const account = useAccount();
+  const account = getAccount(rpcConfig);
 
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);

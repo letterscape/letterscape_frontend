@@ -6,9 +6,10 @@ import {getWeb3Modal} from "@web3modal/scaffold-react"
 
 import { WagmiProvider, useAccount } from 'wagmi';
 import { arbitrum, mainnet, sepolia } from 'wagmi/chains';
-import { mainnet_local } from '@/store/EtherClient/clients';
+import { mainnet_local, rpcConfig } from '@/store/EtherClient/clients';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { walletStore, lsNFTStore, marketStore } from '@/store';
+import { getAccount } from '@wagmi/core';
 
 
 const queryClient = new QueryClient();
@@ -33,7 +34,7 @@ const config = defaultWagmiConfig({
 
 // 3. Create modal
 createWeb3Modal({
-  wagmiConfig: config,
+  wagmiConfig: rpcConfig,
   projectId,
   enableAnalytics: true, // Optional - defaults to your Cloud configuration
   enableOnramp: true, // Optional - false as default
@@ -43,16 +44,12 @@ createWeb3Modal({
 
 function WrapQueryClientProvider({ children }: { children: ReactNode }) {
 
-  const { wallet } = walletStore;
-  const { putAccountAddress } = wallet;  
+  const account = getAccount(rpcConfig);
+  const {wallet} = walletStore;
+  const { createWalletClient, putAccountAddress } = wallet;
   
-  const account = useAccount();
-
+  createWalletClient(account.address as `0x${string}`, window);
   putAccountAddress(account);
-
-  // const { lsNFT } = lsNFTStore;
-  // const { setWallet } = lsNFT;
-  // setWallet(wallet);
 
   return (
     <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
@@ -68,6 +65,8 @@ const Web3Provider = function Web3ModalProvider({ children }: { children: ReactN
   //   '--w3m-color-mix-strength': 40
   // }
   // setThemeVariables(theme);
+  
+
   return (
     <WagmiProvider config={config}>
       <WrapQueryClientProvider >{children}</WrapQueryClientProvider>

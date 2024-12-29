@@ -1,5 +1,4 @@
 import { makeAutoObservable } from 'mobx';
-import { client, sepoliaClient, walletClient } from '../EtherClient';
 import { base } from '../Base';
 import {
   encodePacked,
@@ -14,6 +13,8 @@ import { wallet } from '../Wallet';
 import { wnftApi } from '@/api/wnft/wnft';
 import { successCode } from '@/lib/constants';
 import { getAddress } from "ethers/address";
+import { rpcConfig } from '../EtherClient/clients'
+import { simulateContract, writeContract, readContract } from '@wagmi/core'
 
 
 class LsNFT {
@@ -53,14 +54,14 @@ class LsNFT {
   }
 
   setMarket = async (params: string) => {
-    const { request } = await client.simulateContract({
+    const { request } = await simulateContract(rpcConfig, {
       address: base.nftAddress,
       abi: lsNFTABI,
       functionName: 'setMarket',
       args: [`0x${params.slice(2)}`],
       account: wallet.account,
     })
-    wallet.walletClient.writeContract(request).then(async resp => {
+    writeContract(rpcConfig, request).then(async resp => {
       
       console.log("resp: ", resp);
     }).catch(error => {
@@ -70,7 +71,7 @@ class LsNFT {
   }
 
   getOwner = async () => {
-    const data = await client.readContract({
+    const data = await readContract(rpcConfig, {
       address: base.nftAddress,
       abi: lsNFTABI,
       functionName: 'owner',
@@ -122,7 +123,7 @@ class LsNFT {
   }
 
   getTokenURI = async (tokenId: `0x${string}`) => {
-    const data = await client.readContract({
+    const data = await readContract(rpcConfig, {
       address: base.nftAddress,
       abi: lsNFTABI,
       functionName: 'tokenURI',
@@ -133,18 +134,18 @@ class LsNFT {
   }
 
   setTokenURI = async (tokenId: `0x${string}`, tokenURI: string) => {
-    const { request } = await client.simulateContract({
+    const { request } = await simulateContract(rpcConfig, {
       account: wallet.account,
       address: base.nftAddress,
       abi: lsNFTABI,
       args: [hexToBigInt(tokenId), tokenURI],
       functionName: 'setTokenURI'
     })
-    const txHash = await walletClient.writeContract(request)
+    const txHash = await writeContract(rpcConfig, request)
   }
 
   getOriginURI = async (tokenId: `0x${string}`) => {
-    const data = await client.readContract({
+    const data = await readContract(rpcConfig, {
       address: base.nftAddress,
       abi: lsNFTABI,
       functionName: 'getOriginURI',
@@ -156,7 +157,7 @@ class LsNFT {
 
   getTokenIds = async () => {
     
-    const data = await client.readContract({
+    const data = await readContract(rpcConfig, {
       address: base.nftAddress,
       abi: lsNFTABI,
       functionName: 'getTokenIds',
@@ -168,7 +169,7 @@ class LsNFT {
   getNFTList = async () => {
     const tokenIds = await this.getTokenIds() as Array<BigInt>;
     tokenIds.forEach(async tokenId => {
-      const data = await client.readContract({
+      const data = await readContract(rpcConfig, {
         address: base.marketAddress,
         abi: marketABI,
         functionName: 'getWNFT',
@@ -200,7 +201,7 @@ class LsNFT {
   }
 
   detectExpired = async (tokenId: bigint) => {
-    const data = await client.readContract({
+    const data = await readContract(rpcConfig, {
       address: base.marketAddress,
       abi: marketABI,
       functionName: 'isExpired',

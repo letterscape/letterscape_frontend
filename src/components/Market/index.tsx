@@ -7,13 +7,15 @@ import { wnftApi } from '@/api/wnft/wnft';
 import { successCode } from '@/lib/constants';
 import { WnftInfo } from '@/store/LsNFT';
 import Link from 'next/link';
+import { rpcConfig } from "@/store/EtherClient/clients";
+import { getAccount } from "@wagmi/core";
 
 const Market = () => {
 
   const { lsNFT } = lsNFTStore;
   const { nftGoodsList } = lsNFT;
 
-  const account = useAccount();
+  const account = getAccount(rpcConfig);
 
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);

@@ -8,6 +8,9 @@ import { ETH_TO_WEI } from '@/lib/constants';
 import router from 'next/router';
 import { divideBigIntWithDecimal, formatTimestampToDateTime } from '@/lib/utils';
 import { symbol, symbolDecimal, symbolDimension } from '@/lib/chainTerms';
+import { rpcConfig } from "@/store/EtherClient/clients";
+import { getAccount } from "@wagmi/core";
+import Decimal from "decimal.js";
 
 export enum From {
   MARKET,
@@ -16,7 +19,7 @@ export enum From {
 
 const Buttons = ({nftInfo, from}: {nftInfo: WnftInfo, from: From}) => {
 
-  const account = useAccount();
+  const account = getAccount(rpcConfig);
 
   const { market } = marketStore;
   const { list, buy, burn, getHoldFee } = market;
@@ -51,8 +54,10 @@ const Buttons = ({nftInfo, from}: {nftInfo: WnftInfo, from: From}) => {
     e.preventDefault();
     const formData = new FormData(e.target as HTMLFormElement);
     const sellPrice = formData.get('sellPrice') as string
+    let realBuyPrice = new Decimal(nftInfo.price).times(new Decimal(symbolDimension(Number(nftInfo.chainId)).toString()));
+    let realSellPrice = new Decimal(sellPrice).times(new Decimal(symbolDimension(Number(account.chainId)).toString()));
 
-    await buy(nftInfo.wnftId, nftInfo.tokenId, BigInt(nftInfo.price) * symbolDimension(Number(nftInfo.chainId)), BigInt(sellPrice) * symbolDimension(Number(nftInfo.chainId)));
+    await buy(nftInfo.wnftId, nftInfo.tokenId, BigInt(realBuyPrice.toFixed(0)), BigInt(realSellPrice.toFixed(0)));
     router.push("/lists").then(() => {
       router.reload();
     });

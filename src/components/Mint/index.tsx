@@ -10,12 +10,15 @@ import { NFTGoods } from '@/store/LsNFT';
 import { client } from '@/store/EtherClient';
 import { symbol, symbolDecimal, symbolDimension } from '@/lib/chainTerms';
 import { divideBigIntWithDecimal } from '@/lib/utils';
+import { rpcConfig } from "@/store/EtherClient/clients";
+import { getAccount } from "@wagmi/core";
+import Decimal from "decimal.js";
 
 
-const NoTokenForm = () => {
+const NoTokenForm = ({originURI}: {originURI: string}) => {
 
   const router = useRouter();
-  const account = useAccount();
+  const account = getAccount(rpcConfig);
   
   const { market } = marketStore;
   const { mint } = market;
@@ -23,7 +26,7 @@ const NoTokenForm = () => {
   const { lsNFT } = lsNFTStore;
   const { genTokenId } = lsNFT;
 
-  const [uri, setURI] = useState('');
+  const [uri, setURI] = useState(originURI);
   const [showGo, setShowGo] = useState(false);
 
   async function submit(e: React.FormEvent<HTMLFormElement>) {
@@ -31,13 +34,14 @@ const NoTokenForm = () => {
     const formData = new FormData(e.target as HTMLFormElement);
     const title = formData.get('title') as string 
     // const to = formData.get('to') as string 
-    const originURI = formData.get('originURI') as string
+    // const originURI = formData.get('originURI') as string
     const typeId = formData.get('typeId') as string
     const positionId = formData.get('positionId') as string
     const sellPrice = formData.get('sellPrice') as string 
     const interval = formData.get('interval') as string
     const address = account.address || '0x00';
-    debugger
+    let realPrice = new Decimal(sellPrice).times(new Decimal(symbolDimension(Number(account.chainId)).toString()));
+    
     if (!originURI || originURI.length == 0) {
       // alert("originURI cannot be empty")
     }
@@ -57,7 +61,7 @@ const NoTokenForm = () => {
     let params = {
       tokenId: tokenId,
       chainId: account.chainId,
-      price: BigInt(sellPrice),
+      price: BigInt(realPrice.toFixed(0)),
       interval: Number(interval),
       title: title,
       hostname: hostname,
@@ -78,12 +82,12 @@ const NoTokenForm = () => {
 
   function handleURLChange(event: ChangeEvent<HTMLInputElement>): void {
     const content = event.target.value;
-    setURI(content);
-    if (content.includes('http')) {
-      setShowGo(true);
-    } else {
-      setShowGo(false);
-    }
+    // setURI(content);
+    // if (content.includes('http')) {
+    //   setShowGo(true);
+    // } else {
+    //   setShowGo(false);
+    // }
   }
 
   function handleTypeSelection(event: ChangeEvent<HTMLSelectElement>): void {
@@ -98,11 +102,11 @@ const NoTokenForm = () => {
             Title
             <input name="title" type="text" className="grow" placeholder="set a title to NFT" required />
           </label>
-          <label className="input border-[var(--bg-border)] input-primary flex items-center gap-2 bg-transparent">
+          {/* <label className="input border-[var(--bg-border)] input-primary flex items-center gap-2 bg-transparent">
             OriginURI
-            <input name="originURI" type="text" className="grow" placeholder="originURI" onChange={handleURLChange} required />
+            <input name="originURI" value={uri} type="text" className="grow" placeholder="originURI" required />
             {showGo && <button onClick={handleGo} type="button"><kbd>Go</kbd></button>}
-          </label>
+          </label> */}
           <label className="input border-[var(--bg-border)] input-primary flex items-center gap-2 block bg-transparent">
             Type
             {/* <input name="typeId" type="text" className="grow" placeholder="typeId of NFT" required /> */}
@@ -137,7 +141,7 @@ const NoTokenForm = () => {
 
 const TokenForm = () => {
   const router = useRouter();
-  const account = useAccount();
+  const account = getAccount(rpcConfig);
 
   const { market } = marketStore;
   const { mint, getMintFee } = market;
@@ -165,6 +169,7 @@ const TokenForm = () => {
     const sellPrice = formData.get('sellPrice') as string ;
     const interval = formData.get('interval') as string;
     const originURI = await getOriginURI(tokenId as `0x${string}`);
+    let realPrice = new Decimal(sellPrice).times(new Decimal(symbolDimension(Number(account.chainId)).toString()));
 
     if (!originURI) {
       // alert('originURI not exists');
@@ -174,7 +179,7 @@ const TokenForm = () => {
     let params = {
       tokenId: tokenId as `0x${string}`,
       chainId: account.chainId,
-      price: BigInt(sellPrice),
+      price: BigInt(realPrice.toFixed(0)),
       interval: Number(interval),
       title: title,
       hostname: undefined,
@@ -264,11 +269,11 @@ const TokenForm = () => {
             TokenId
             <input name="tokenId" type="text" className="grow" placeholder="66 length string started with 0x" required onChange={handleTokenIdChange}/>
           </label>
-          <label className="input border-[var(--bg-border)] input-primary flex items-center gap-2 bg-transparent">
+          {/* <label className="input border-[var(--bg-border)] input-primary flex items-center gap-2 bg-transparent">
             originURI
             <input name="originURI" type="text" className="grow" disabled placeholder={uri} onChange={handleURLChange}/>
             {showGo && <button onClick={handleGo} type="button"><kbd>Go</kbd></button>}
-          </label>
+          </label> */}
           <label className="input border-[var(--bg-border)] input-primary flex items-center gap-2 bg-transparent">
             sellPrice
             <input name="sellPrice" type="text" className="grow" placeholder="set a sell price for NFT" required onChange={handleSellPriceChange}/>
@@ -319,6 +324,10 @@ const TokenForm = () => {
 
 const Mint = () => {
 
+  const router = useRouter();
+  const { from } = router.query;
+  const originURI = from as string;
+
   return (
     <div className='gap-px max-w-xl mx-auto p-8 '>
       {/* <div className="p-16">
@@ -327,7 +336,7 @@ const Mint = () => {
       <div role="tablist" className="tabs tabs-lifted bg-transparent">
         <input type="radio" name="creation_tab" role="tab" className="tab [--tab-bg:rgba(255,255,255,0.5)] aria-selected:[--tab-bg:rgba(255,255,255,0.9)]" aria-label="Mint with URL" defaultChecked/>
         <div role="tab" className="tab-content rounded-box p-6 bg-transparent  border-[var(--bg-border)]">
-          <NoTokenForm />
+          <NoTokenForm originURI={originURI}/>
         </div>
 
         <input type="radio" name="creation_tab" role="tab" className="tab [--tab-bg:rgba(255,255,255,0.5)] aria-selected:[--tab-bg:rgba(255,255,255,0.9)]" aria-label="Mint with tokenId" />

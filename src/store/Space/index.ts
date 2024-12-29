@@ -1,10 +1,12 @@
 import { spaceApi } from '@/api/space/space'
 import { successCode } from '@/lib/constants'
 import { makeAutoObservable } from 'mobx'
-import { client, walletClient } from '../EtherClient'
+import { simulateContract, writeContract } from '@wagmi/core'
+// import { client, walletClient } from '../EtherClient'
 import { wallet } from '../Wallet'
 import { base } from '../Base'
 import { spaceABI } from './abi'
+import { rpcConfig } from '../EtherClient/clients'
 
 class Space {
 
@@ -13,14 +15,15 @@ class Space {
   }
 
   create = async ({content, originURI}: {content: SpaceContent, originURI: string}) => {
-    const { request } = await client.simulateContract({
+    const { request } = await simulateContract(rpcConfig, {
       account: wallet.account,
       address: base.spaceAddress,
       abi: spaceABI,
       args: [content.contentId, content.title, content.resource, originURI],
       functionName: 'create'
     })
-    const txHash = await walletClient.writeContract(request)
+    const txHash = await writeContract(rpcConfig,request)
+    debugger
     spaceApi.create(content).then(resp => {
       if (resp && resp.code === successCode) {
         // alert("success");
@@ -33,14 +36,14 @@ class Space {
   }
 
   publish = async (contentId: string) => {
-    const { request } = await client.simulateContract({
+    const { request } = await simulateContract(rpcConfig, {
       account: wallet.account,
       address: base.spaceAddress,
       abi: spaceABI,
       args: [contentId, true],
       functionName: 'setShowStatus'
     })
-    const txHash = await walletClient.writeContract(request)
+    const txHash = await writeContract(rpcConfig, request)
     let params = {
       contentId: contentId
     }

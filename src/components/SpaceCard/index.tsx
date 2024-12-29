@@ -5,15 +5,20 @@ import router from "next/router";
 import { useAccount } from "wagmi";
 import { spaceStore } from '@/store';
 import { truncateDynamic } from "@/lib/utils";
+import getConfig from "next/config";
+import { rpcConfig } from "@/store/EtherClient/clients";
+import { getAccount } from "@wagmi/core";
 
 export enum From {
   PUBLIC,
   PRIVATE,
 }
 
-const Buttons = ({content}: {content: SpaceContent}) => {
+const Buttons = ({content, link}: {content: SpaceContent, link: string}) => {
 
-  const account = useAccount();
+  const { publicRuntimeConfig } = getConfig();
+  const baseUrl = publicRuntimeConfig.baseUrl;
+  const account = getAccount(rpcConfig);
 
   const { space } = spaceStore;
   const { publish } = space;
@@ -24,6 +29,19 @@ const Buttons = ({content}: {content: SpaceContent}) => {
     if (content) {
       await publish(content.contentId);
       router.push('/space')
+    }
+  }
+
+  const handleMint = async (event: React.MouseEvent<HTMLButtonElement, MouseEvent>, link: string) => {
+    event.preventDefault();
+
+    if (link) {
+      router.push({
+        pathname: '/mint',
+        query:{
+          from: `${baseUrl}${link}`,
+        }
+      })
     }
   }
 
@@ -66,12 +84,17 @@ const Buttons = ({content}: {content: SpaceContent}) => {
         </div>
       } */}
       {account.address == content.author &&
-        <div className="grid grid-cols-1 w-full gap-0">
+        <div className="grid grid-cols-2 w-full gap-0">
           <div className="card-actions justify-center bg-gray-300">
             <button
               className="btn w-full rounded-none bg-gradient-to-r from-green-600/50 to-green-800/50 backdrop-blur-md text-white font-extrabold hover:from-green-700/60 hover:to-green-900/60 hover:scale-103 transition-transform duration-300" 
               disabled={content.isShown}
               onClick={handlePublish}>Publish</button>
+          </div>
+          <div className="card-actions justify-center bg-gray-300">
+            <button
+              className="btn w-full rounded-none bg-gradient-to-r from-blue-600/50 to-blue-800/50 backdrop-blur-md text-white font-extrabold hover:from-blue-700/60 hover:to-blue-900/60 hover:scale-103 transition-transform duration-300" 
+              onClick={(e) => handleMint(e, link)}>Mint</button>
           </div>
         </div>
       }
@@ -107,7 +130,7 @@ const SpaceCard = ({content, link, from}: {content: SpaceContent, link: string, 
         </Link>
         { from === From.PRIVATE &&
           <div className="mt-auto">
-            <Buttons content={content} />
+            <Buttons content={content} link={link} />
           </div>
         }
       </div>

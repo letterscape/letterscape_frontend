@@ -9,12 +9,17 @@ import { successCode } from "@/lib/constants";
 import { spaceStore } from "@/store";
 import { SpaceContent } from "@/store/Space";
 import { useAccount } from "wagmi";
+import { getAccount } from '@wagmi/core'
 import getConfig from "next/config";
+import { base } from "@/store/Base";
+import { spaceABI } from "@/store/Space/abi";
+import { rpcConfig } from "@/store/EtherClient/clients";
 
 
 const Create = () => {
   const router = useRouter();
-  const account = useAccount();
+  const account = getAccount(rpcConfig);
+
   
   const { publicRuntimeConfig } = getConfig();
   const baseUrl = publicRuntimeConfig.baseUrl;
@@ -36,9 +41,8 @@ const Create = () => {
       content: draft
     }
     spaceApi.upload(param).then(async resp => {
-      
       if (resp && resp.code === successCode) {
-        
+
         const cid = resp.data;
         let content = {
           contentId: contentId,
@@ -50,11 +54,12 @@ const Create = () => {
           label: 0,
           isShown: false
         } as SpaceContent
+        let originURI = `${baseUrl}/contents/${contentId}`;
         let params = {
+          address: account.address as `0x${string}`,
           content: content,
-          originURI: `${baseUrl}/contents/${contentId}`
+          originURI: originURI,
         }
-        debugger
         await create(params);
         router.push("/contents").then(() => {
           router.reload();

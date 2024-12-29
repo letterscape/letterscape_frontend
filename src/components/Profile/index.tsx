@@ -4,6 +4,8 @@ import { ChangeEvent, useEffect, useState } from 'react';
 import { useAccount, useWriteContract } from 'wagmi'
 import {abi} from '@/store/LsNFT/abi';
 import { base } from '@/store/Base';
+import { rpcConfig } from "@/store/EtherClient/clients";
+import { getAccount } from "@wagmi/core";
 
 const { lsNFT } = lsNFTStore;
 const { setMarket, getOwner, contractOwner } = lsNFT;
@@ -93,7 +95,7 @@ const GetOwner = () => {
 
 const Profile = () => {
 
-  const account = useAccount();
+  const account = getAccount(rpcConfig);
 
   return (
     <div role="tablist" className="tabs tabs-bordered">
