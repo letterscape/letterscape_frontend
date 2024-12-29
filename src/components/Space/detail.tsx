@@ -1,10 +1,12 @@
 import {Article} from '@/store/Posts';
 import Scape from '../Scape';
 import { useAccount } from 'wagmi';
+import { rpcConfig } from "@/store/EtherClient/clients";
+import { getAccount } from "@wagmi/core";
 
 const SpaceDetail = ({article, hostname, uri}: {article: Article, hostname: string, uri: string}) => {
 
-  const account = useAccount();
+  const account = getAccount(rpcConfig);
   debugger
   return (
     <div className="max-w-3xl mx-auto p-6">

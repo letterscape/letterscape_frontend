@@ -10,13 +10,15 @@ import React from "react";
 import Scape from "../Scape";
 import { useAccount } from "wagmi";
 import getConfig from "next/config";
+import { rpcConfig } from "@/store/EtherClient/clients";
+import { getAccount } from "@wagmi/core";
 
 const { publicRuntimeConfig } = getConfig();
 const baseUrl = publicRuntimeConfig.baseUrl;
 
 const Header = ({pathId}: {pathId: string}) => {
 
-  const account = useAccount();
+  const account = getAccount(rpcConfig);
   const [counter, setCounter] = useState(0);
 
   const maxVisible = 3;
@@ -48,7 +50,7 @@ const Header = ({pathId}: {pathId: string}) => {
 const Body = ({htmlContent, interval}: {htmlContent: string, interval: number}) => {
 
   const { id } = router.query;
-  const account = useAccount();
+  const account = getAccount(rpcConfig);
 
   // resovle html to DOM node array
   const contentNodes = parse(htmlContent, {
@@ -75,11 +77,11 @@ const Body = ({htmlContent, interval}: {htmlContent: string, interval: number}) 
   let pInterval = 0;
 
   React.Children.forEach(contentNodes, (node, index) => {
-    debugger
+
     if (React.isValidElement(node) && node.type === "p") {
       contentWithResrouce.push(node);
       pCounter++;
-      debugger
+
       // insert resource
       if (pCounter % interval === 0) {
         pInterval++;
@@ -107,7 +109,7 @@ const Body = ({htmlContent, interval}: {htmlContent: string, interval: number}) 
 
 const Footer = ({pathId}: {pathId: string}) => {
 
-  const account = useAccount();
+  const account = getAccount(rpcConfig);
   const [counter, setCounter] = useState(0);
   var holdAmt = 0;
   const maxHold = 100;
@@ -150,7 +152,7 @@ const Footer = ({pathId}: {pathId: string}) => {
 const SpaceDetail = () => {
   const router = useRouter();
   const { id } = router.query;
-  const account = useAccount();
+  const account = getAccount(rpcConfig);
   
   const [loading, setLoading] = useState(true);
   const [pathId, setPathId] = useState('');
@@ -228,7 +230,7 @@ const SpaceDetail = () => {
   if (!pathId || loading) {
     return <div>Loading...</div>;
   }
-
+  
   return (
     <div className="max-w-3xl mx-auto p-4">
       <div className="text-5xl border font-bold border-gray-300 rounded border-none outline-none resize-none w-full pb-4">{content?.title}</div>

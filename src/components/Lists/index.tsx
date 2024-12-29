@@ -10,6 +10,8 @@ import Link from 'next/link';
 import { WnftInfo } from '@/store/LsNFT';
 import { wnftApi } from '@/api/wnft/wnft';
 import { successCode } from '@/lib/constants';
+import { rpcConfig } from "@/store/EtherClient/clients";
+import { getAccount } from "@wagmi/core";
 
 export enum ListStatus {
   NONE,
@@ -62,7 +64,7 @@ const Saleslist = () => {
   const { lsNFT } = lsNFTStore;
   const { wnftInfoList, getPage } = lsNFT;
 
-  const account = useAccount();
+  const account = getAccount(rpcConfig);
   const tokenIdSet: string[] = [];
 
   const [loading, setLoading] = useState(true);

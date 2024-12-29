@@ -1,5 +1,6 @@
 import { makeAutoObservable } from 'mobx'
-import { client, sepoliaClient, walletClient } from '../EtherClient'
+import { simulateContract, writeContract, readContract, signTypedData } from '@wagmi/core'
+// import { client, sepoliaClient, walletClient } from '../EtherClient'
 import { abi as marketABI } from './abi'
 import { base } from '../Base'
 import {
@@ -15,6 +16,7 @@ import { domain, types } from '../Market/data'
 import { wnftApi } from '@/api/wnft/wnft'
 import { successCode } from '@/lib/constants'
 import { symbolDimension } from '@/lib/chainTerms'
+import { rpcConfig } from '../EtherClient/clients'
 
 class Market {
 
@@ -23,7 +25,7 @@ class Market {
   }
 
   getNonces = async () => {
-    const data = await client.readContract({
+    const data = await readContract(rpcConfig, {
       account: wallet.account,
       address: base.marketAddress,
       abi: marketABI,
@@ -35,28 +37,28 @@ class Market {
 
   mint = async ({tokenId, price, interval, title, hostname, originURI, firstCreate}: {tokenId: `0x${string}`, price: bigint, interval: number, title: string, hostname: string | undefined, originURI: string, firstCreate: boolean}) => {
     
-    if (!wallet || !wallet.account) {
+    if (!wallet) {
       // alert("please connect wallet first")
       return
     }
-
+    debugger
     const creator = lsNFT.getCreator(tokenId);
-    let realPrice = price * symbolDimension(Number(wallet.chainId));
+    
     let mintfee = BigInt(0);
     
     if (!firstCreate && wallet.account !== creator) {
-      mintfee = await this.getMintFee(realPrice) as bigint
+      mintfee = await this.getMintFee(price) as bigint
     }
-    
-    const { request } = await client.simulateContract({
+    debugger
+    const { request } = await simulateContract(rpcConfig, {
       account: wallet.account,
       address: base.marketAddress,
       abi: marketABI,
-      args: [hexToBigInt(tokenId), realPrice, interval, originURI],
+      args: [hexToBigInt(tokenId), price, interval, originURI],
       functionName: 'mint',
       value: mintfee
     })
-    const txHash = await walletClient.writeContract(request)
+    const txHash = await writeContract(rpcConfig, request)
     
     let params = {
       tokenId: tokenId,
@@ -81,7 +83,7 @@ class Market {
     const nonces = await this.getNonces() as bigint
     
     const tokenId = hexToBigInt(wnft.tokenId)
-    const sellerSign = await wallet.walletClient.signTypedData({
+    const sellerSign = await signTypedData(rpcConfig, {
       domain,
       types,
       primaryType: 'WNFT',
@@ -95,14 +97,14 @@ class Market {
       account: wallet.account
     })
     console.log('sellerSign: ', hexToBigInt(sellerSign))
-    const { request } = await client.simulateContract({
+    const { request } = await simulateContract(rpcConfig, {
       account: wallet.account,
       address: base.marketAddress,
       abi: marketABI,
       args: [tokenId, wnft.price, sellerSign],
       functionName: 'list',
     })
-    const txHash = await walletClient.writeContract(request)
+    const txHash = await writeContract(rpcConfig, request)
     let params = {
       wnftId: wnft.wnftId,
       owner: wallet.account,
@@ -119,8 +121,8 @@ class Market {
     console.log('buy nft: ', tokenId)
     
     const holdfee = await this.getHoldFee(tokenId) as bigint
-    
-    const { request } = await client.simulateContract({
+    debugger
+    const { request } = await simulateContract(rpcConfig, {
       account: wallet.account,
       address: base.marketAddress,
       abi: marketABI,
@@ -128,7 +130,8 @@ class Market {
       functionName: 'buy',
       value: buyPrice + holdfee
     })
-    const txHash = await walletClient.writeContract(request)
+    debugger
+    const txHash = await writeContract(rpcConfig, request)
     let params = {
       wnftId: wnftId,
       txHash: txHash
@@ -142,14 +145,14 @@ class Market {
 
   burn = async (wnftId: string, tokenId: `0x${string}`) => {
     console.log('burn nft: ', tokenId)
-    const { request } = await client.simulateContract({
+    const { request } = await simulateContract(rpcConfig, {
       account: wallet.account,
       address: base.marketAddress,
       abi: marketABI,
       args: [tokenId],
       functionName: 'burn'
     })
-    const txHash = await walletClient.writeContract(request)
+    const txHash = await writeContract(rpcConfig, request)
     let params = {
       wnftId: wnftId,
       txHash: txHash
@@ -162,7 +165,7 @@ class Market {
   }
 
   getHoldFee = async (tokenId: `0x${string}`) => {
-    const data = await client.readContract({
+    const data = await readContract(rpcConfig, {
       account: wallet.account,
       address: base.marketAddress,
       abi: marketABI,
@@ -173,7 +176,7 @@ class Market {
   }
 
   payHoldFee = async (wnftId: string, tokenId: `0x${string}`, holdfee: bigint) => {
-    const { request } = await client.simulateContract({
+    const { request } = await simulateContract(rpcConfig, {
       account: wallet.account,
       address: base.marketAddress,
       abi: marketABI,
@@ -181,7 +184,7 @@ class Market {
       functionName: 'payHoldFee',
       value: holdfee
     })
-    const txHash = await walletClient.writeContract(request)
+    const txHash = await writeContract(rpcConfig, request)
     let params = {
       wnftId: wnftId,
       txHash: txHash
@@ -195,7 +198,7 @@ class Market {
   }
 
   getMintFee = async (price: bigint) => {
-    const data = await client.readContract({
+    const data = await readContract(rpcConfig, {
       account: wallet.account,
       address: base.marketAddress,
       abi: marketABI,

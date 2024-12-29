@@ -1,7 +1,7 @@
 import { makeAutoObservable } from 'mobx';
 import { WalletClient, createWalletClient, custom } from 'viem';
-import { etherWindow, transport, walletClient as etherWalletClient } from '../EtherClient';
-import { mainnet_local } from '../EtherClient/clients';
+import { etherWindow, transport, walletClient as defaultWalletClient } from '../EtherClient';
+import { bsc_testnet, mainnet_local } from '../EtherClient/clients';
 import { stringify } from 'querystring';
 
 
@@ -10,7 +10,7 @@ export class Wallet {
   constructor() {
     // makeAutoObservable: 自动将所有属性和方法转换为可观察对象。
     makeAutoObservable(this);
-    this.createWalletClient();
+    // this.createWalletClient();
   }
 
   walletInfo = {
@@ -25,7 +25,7 @@ export class Wallet {
   account: `0x${string}` = '0x0';
   chainId = '0';
 
-  walletClient: WalletClient = etherWalletClient
+  walletClient: WalletClient = defaultWalletClient;
 
   setWalletInfo = (param : any) => {
     this.walletInfo.name = param?.name || ''
@@ -39,10 +39,10 @@ export class Wallet {
     if (param!.chainId) {
       this.chainId = String(param!.chainId);
     }
-    this.createWalletClient();
+    // this.createWalletClient(this.account);
   }
 
-  createWalletClient = () => {
+  createWalletClient = (address: `0x${string}`, window: Window) => {
     // let walletTransport = transport
     // if (typeof etherWindow !== "undefined") {
     //   walletTransport = custom(etherWindow.ethereum!)
@@ -53,20 +53,24 @@ export class Wallet {
     //   transport: transport
     // })
     // return createWalletClient
-    this.getWalletClient();
+    this.getWalletClient(address, window);
  }
 
- getWalletClient = async () => {
+ getWalletClient = (address: `0x${string}`, window: Window) => {
   // if (typeof etherWindow !== "undefined") {
 
   //   const [account] = await etherWindow.ethereum!.request({ method: 'eth_requestAccounts' });
   //   this.account = account;
   // }
-
+  
+  if (!address || !window) {
+    return
+  }
   this.walletClient = createWalletClient({
-    account: this.account,
-    chain: mainnet_local,
-    transport: transport
+    account: address,
+    chain: bsc_testnet,
+    transport: custom(window.ethereum!)
+    // transport: transport
   })
  }
 

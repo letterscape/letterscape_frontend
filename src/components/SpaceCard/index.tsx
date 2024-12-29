@@ -6,6 +6,8 @@ import { useAccount } from "wagmi";
 import { spaceStore } from '@/store';
 import { truncateDynamic } from "@/lib/utils";
 import getConfig from "next/config";
+import { rpcConfig } from "@/store/EtherClient/clients";
+import { getAccount } from "@wagmi/core";
 
 export enum From {
   PUBLIC,
@@ -16,7 +18,7 @@ const Buttons = ({content, link}: {content: SpaceContent, link: string}) => {
 
   const { publicRuntimeConfig } = getConfig();
   const baseUrl = publicRuntimeConfig.baseUrl;
-  const account = useAccount();
+  const account = getAccount(rpcConfig);
 
   const { space } = spaceStore;
   const { publish } = space;
@@ -32,7 +34,7 @@ const Buttons = ({content, link}: {content: SpaceContent, link: string}) => {
 
   const handleMint = async (event: React.MouseEvent<HTMLButtonElement, MouseEvent>, link: string) => {
     event.preventDefault();
-    debugger
+
     if (link) {
       router.push({
         pathname: '/mint',

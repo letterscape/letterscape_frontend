@@ -10,12 +10,15 @@ import { NFTGoods } from '@/store/LsNFT';
 import { client } from '@/store/EtherClient';
 import { symbol, symbolDecimal, symbolDimension } from '@/lib/chainTerms';
 import { divideBigIntWithDecimal } from '@/lib/utils';
+import { rpcConfig } from "@/store/EtherClient/clients";
+import { getAccount } from "@wagmi/core";
+import Decimal from "decimal.js";
 
 
 const NoTokenForm = ({originURI}: {originURI: string}) => {
 
   const router = useRouter();
-  const account = useAccount();
+  const account = getAccount(rpcConfig);
   
   const { market } = marketStore;
   const { mint } = market;
@@ -37,7 +40,8 @@ const NoTokenForm = ({originURI}: {originURI: string}) => {
     const sellPrice = formData.get('sellPrice') as string 
     const interval = formData.get('interval') as string
     const address = account.address || '0x00';
-    debugger
+    let realPrice = new Decimal(sellPrice).times(new Decimal(symbolDimension(Number(account.chainId)).toString()));
+    
     if (!originURI || originURI.length == 0) {
       // alert("originURI cannot be empty")
     }
@@ -57,7 +61,7 @@ const NoTokenForm = ({originURI}: {originURI: string}) => {
     let params = {
       tokenId: tokenId,
       chainId: account.chainId,
-      price: BigInt(sellPrice),
+      price: BigInt(realPrice.toFixed(0)),
       interval: Number(interval),
       title: title,
       hostname: hostname,
@@ -137,7 +141,7 @@ const NoTokenForm = ({originURI}: {originURI: string}) => {
 
 const TokenForm = () => {
   const router = useRouter();
-  const account = useAccount();
+  const account = getAccount(rpcConfig);
 
   const { market } = marketStore;
   const { mint, getMintFee } = market;
@@ -165,6 +169,7 @@ const TokenForm = () => {
     const sellPrice = formData.get('sellPrice') as string ;
     const interval = formData.get('interval') as string;
     const originURI = await getOriginURI(tokenId as `0x${string}`);
+    let realPrice = new Decimal(sellPrice).times(new Decimal(symbolDimension(Number(account.chainId)).toString()));
 
     if (!originURI) {
       // alert('originURI not exists');
@@ -174,7 +179,7 @@ const TokenForm = () => {
     let params = {
       tokenId: tokenId as `0x${string}`,
       chainId: account.chainId,
-      price: BigInt(sellPrice),
+      price: BigInt(realPrice.toFixed(0)),
       interval: Number(interval),
       title: title,
       hostname: undefined,

@@ -8,11 +8,13 @@ import SpaceCard from "../SpaceCard";
 import { PlusIcon } from "@heroicons/react/24/outline";
 import Link from "next/link";
 import { From } from "../SpaceCard";
+import { rpcConfig } from "@/store/EtherClient/clients";
+import { getAccount } from "@wagmi/core";
 
 
 const Contents = () => {
 
-  const account = useAccount();
+  const account = getAccount(rpcConfig);
 
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);

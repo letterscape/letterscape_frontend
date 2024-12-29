@@ -7,10 +7,12 @@ import { successCode } from "@/lib/constants";
 import { useAccount } from "wagmi";
 import { symbol } from "@/lib/chainTerms";
 import { truncateDynamic } from "@/lib/utils";
+import { rpcConfig } from "@/store/EtherClient/clients";
+import { getAccount } from "@wagmi/core";
 
 const PriceChart = ({wnftId}: {wnftId: string}) => {
 
-  const account = useAccount();
+  const account = getAccount(rpcConfig);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [data, setData] = useState();

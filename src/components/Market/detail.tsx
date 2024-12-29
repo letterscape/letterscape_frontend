@@ -15,6 +15,8 @@ import { marketStore } from "@/store";
 import { divideBigIntWithDecimal, truncateDynamic } from "@/lib/utils";
 import { wnftResrouceApi } from "@/api/wnft/resource";
 import { scapeType } from "../Scape";
+import { rpcConfig } from "@/store/EtherClient/clients";
+import { getAccount } from "@wagmi/core";
 
 let timeLeft = {
   day: 0,
@@ -116,7 +118,7 @@ const CountDown = ({onBurnChange, deadline}: {onBurnChange: any, deadline: numbe
 
 const MarketDetail = () => {
 
-  const account = useAccount();
+  const account = getAccount(rpcConfig);
 
   const router = useRouter();
   const { id } = router.query;

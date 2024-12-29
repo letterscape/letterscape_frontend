@@ -44,6 +44,7 @@ export const symbol = (chainId: number | undefined): string => {
 }
 
 export const symbolDimension = (chainId: number | undefined): bigint => {
+
   if (!chainId) {
     return BigInt(1)
   }
