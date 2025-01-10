@@ -4,11 +4,9 @@ import { bscTestnet, mainnet, sepolia } from 'wagmi/chains'
 import { metaMask } from '@wagmi/connectors'
 
 export const mainnet_local = /*#__PURE__*/ defineChain({
-  // id: 1,
-  // name: 'ethereum_mainnet_local',
-  id: 97,
-  name: 'BSC_Testnet',
-  nativeCurrency: { name: 'TBNB', symbol: 'tBNB', decimals: 18 },
+  id: 1,
+  name: 'ethereum_mainnet_local',
+  nativeCurrency: { name: 'ETH', symbol: 'ETH', decimals: 18 },
   rpcUrls: {
     default: {
       http: ['http://127.0.0.1:8545'],
